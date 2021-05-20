@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Concurrent;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using FavCat;
 using FavCat.CustomLists;
@@ -21,7 +19,7 @@ using VRC.Core;
 using Object = UnityEngine.Object;
 using ImageDownloaderClosure = ImageDownloader.__c__DisplayClass11_1;
 
-[assembly:MelonInfo(typeof(FavCatMod), "FavCatRestored", "1.1.1", "Felkon (Original By Knah)", "https://github.com/FelkonEx/FavCat-Restored")]
+[assembly:MelonInfo(typeof(FavCatMod), "FavCatRestored", "1.1.2", "Felkon (Original By Knah)", "https://github.com/FelkonEx/FavCat-Restored")]
 [assembly:MelonGame("VRChat", "VRChat")]
 
 namespace FavCat
@@ -37,8 +35,6 @@ namespace FavCat
         
         private static bool ourInitDone;
         
-        private static readonly ConcurrentQueue<Action> ToMainThreadQueue = new();
-
         public override void OnApplicationStart()
         {
             Instance = this;
@@ -139,28 +135,6 @@ namespace FavCat
             myWorldsModule?.Update();
             playerModule?.Update();
             GlobalImageCache.OnUpdate();
-
-            if (ToMainThreadQueue.TryDequeue(out var action))
-                action();
-        }
-
-        public static MainThreadAwaitable YieldToMainThread()
-        {
-            return new MainThreadAwaitable();
-        }
-
-        public struct MainThreadAwaitable : INotifyCompletion
-        {
-            public bool IsCompleted => false;
-
-            public MainThreadAwaitable GetAwaiter() => this;
-
-            public void GetResult() { }
-
-            public void OnCompleted(Action continuation)
-            {
-                ToMainThreadQueue.Enqueue(continuation);
-            }
         }
     }
 
