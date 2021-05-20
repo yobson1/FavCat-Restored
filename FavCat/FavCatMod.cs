@@ -26,7 +26,7 @@ using ImageDownloaderClosure = ImageDownloader.__c__DisplayClass11_1;
 
 namespace FavCat
 {
-    public class FavCatMod : MelonMod
+    public class FavCatMod : CustomizedMelonMod
     {
         public static LocalStoreDatabase? Database;
         internal static FavCatMod Instance;
@@ -63,6 +63,8 @@ namespace FavCat
             {
                 Harmony.Patch(methodInfo, new HarmonyMethod(typeof(FavCatMod), nameof(AvatarPedestalPatch)));
             }
+            
+            DoAfterUiManagerInit(OnUiManagerInit);
         }
 
         private static void AvatarPedestalPatch(ApiContainer __0)
@@ -93,7 +95,7 @@ namespace FavCat
                 yield return null;
         }
 
-        public override void VRChat_OnUiManagerInit()
+        public void OnUiManagerInit()
         {
             AssetsHandler.Load();
 
