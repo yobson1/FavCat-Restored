@@ -6,6 +6,7 @@ I haven't changed any of the functionality outside of breaking-off the FavCat's 
 * There's some clean code changes in the original repo that clean up the existing FavCat.
 * Merging in UIExpansionKit changes (for build purposes).
 
+If there are any issues, **submit an issue ticket and i'll have a look** 👀
 
 ## See [original VRCMods repo](https://github.com/knah/VRCMods/blob/master/README.md) for original README file
 This one has just been yoinked and reverted.
