@@ -1,7 +1,9 @@
 This repo's fork will contain changes to revert the decision of having VRC+ to use any of the favoriting within FavCat, forked from the [original VRCMods repo](https://github.com/knah/VRCMods).
 I highly recommend supporting the original VRCMods developers, as they're the ones that set the foundation for FavCat.
 
-I haven't changed any of the functionality outside of reverting FavCat's VRC+ changes, but i'll try and keep this repo up to sync for future versions of VRC (I.E. for UIExpansionKit build req's).
+I haven't changed any of the functionality outside of reverting FavCat's VRC+ changes, And i won't be unless:
+* VRChat breaks the current version, and i need to fix it.
+* There's some clean code changes in the original repo that clean up the existing FavCat
 
 
 ## Canny Tickets
@@ -104,7 +106,7 @@ Then, you will have to put mod .dll files in the `Mods` folder of your game dire
 
 ## Building
 To build these, drop required libraries (found in `<vrchat instanll dir>/MelonLoader/Managed` after melonloader installation, list found in `Directory.Build.props`) into Libs folder, then use your IDE of choice to build.
- * Libs folder is intended for newest libraries (MelonLoader 0.2.2)
+ * Libs folder is intended for newest libraries (MelonLoader 0.3.0)
 
 ## License
 With the following exceptions, all mods here are provided under the terms of [GNU GPLv3 license](LICENSE)
