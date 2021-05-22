@@ -45,30 +45,25 @@ namespace FavCat
                 await Task.Delay(TimeSpan.FromSeconds(5f + Random.Range(0f, 5f))).ConfigureAwait(false);
             }
 
-            var canShowFavorites = DateTime.Now < FavCatMod.NoMoreVisibleAvatarFavoritesAfter;
-
-            if (canShowFavorites)
+            ImportStatusOuter = "Fetching avatars...";
+            var avatarFavs = database.AvatarFavorites.myStoredFavorites.FindAll().ToList();
+            for (var i = 0; i < avatarFavs.Count; i++)
             {
-                ImportStatusOuter = "Fetching avatars...";
-                var avatarFavs = database.AvatarFavorites.myStoredFavorites.FindAll().ToList();
-                for (var i = 0; i < avatarFavs.Count; i++)
+                ImportStatusInner = i + "/" + avatarFavs.Count;
+                
+                var storedFavorite = avatarFavs[i];
+                if (database.myStoredAvatars.FindById(storedFavorite.ObjectId) != null) continue;
+
+                await FavCatMod.YieldToMainThread();
+
+                new ApiAvatar {id = storedFavorite.ObjectId}.Fetch(null, new Action<ApiContainer>(c =>
                 {
-                    ImportStatusInner = i + "/" + avatarFavs.Count;
+                    if (c.Code == 404) database.CompletelyDeleteAvatar(storedFavorite.ObjectId);
+                }));
 
-                    var storedFavorite = avatarFavs[i];
-                    if (database.myStoredAvatars.FindById(storedFavorite.ObjectId) != null) continue;
-
-                    await FavCatMod.YieldToMainThread();
-
-                    new ApiAvatar {id = storedFavorite.ObjectId}.Fetch(null, new Action<ApiContainer>(c =>
-                    {
-                        if (c.Code == 404) database.CompletelyDeleteAvatar(storedFavorite.ObjectId);
-                    }));
-
-                    await Task.Delay(TimeSpan.FromSeconds(5f + Random.Range(0f, 5f))).ConfigureAwait(false);
-                }
+                await Task.Delay(TimeSpan.FromSeconds(5f + Random.Range(0f, 5f))).ConfigureAwait(false);
             }
-
+            
             ImportStatusOuter = "Fetching players...";
             var playerFavs = database.PlayerFavorites.myStoredFavorites.FindAll().ToList();
             for (var i = 0; i < playerFavs.Count; i++)

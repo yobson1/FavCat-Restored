@@ -18,7 +18,7 @@ namespace FavCat.Modules
     {
         internal static PageUserInfo PageUserInfo;
         
-        public PlayersModule() : base(ExpandedMenu.SocialMenu, FavCatMod.Database.PlayerFavorites, GetListsParent(), true, true, false)
+        public PlayersModule() : base(ExpandedMenu.SocialMenu, FavCatMod.Database.PlayerFavorites, GetListsParent(), false)
         {
             ExpansionKitApi.GetExpandedMenu(ExpandedMenu.UserDetailsMenu).AddSimpleButton("Local Favorite", ShowFavMenu);
             
@@ -73,34 +73,32 @@ namespace FavCat.Modules
         }
 
         private string myLastRequestedPlayer = "";
-        protected override void OnPickerSelected(IPickerElement picker) => OnPickerSelected(picker.Id, listsParent.gameObject);
-        
-        public void OnPickerSelected(string playerId, GameObject whichObjectToCheck)
+        protected override void OnPickerSelected(IPickerElement picker)
         {
-            if (playerId == myLastRequestedPlayer) 
+            if (picker.Id == myLastRequestedPlayer) 
                 return;
             
             PlaySound();
 
-            myLastRequestedPlayer = playerId;
-            var user = new APIUser {id = playerId};
+            myLastRequestedPlayer = picker.Id;
+            var user = new APIUser {id = picker.Id};
             user.Fetch(new Action<ApiContainer>(_ =>
             {
                 myLastRequestedPlayer = "";
-                if (whichObjectToCheck.activeInHierarchy)
+                if (listsParent.gameObject.activeInHierarchy)
                     ShowUserPage(user);
             }), new Action<ApiContainer>(c =>
             {
                 myLastRequestedPlayer = "";
                 if (Imports.IsDebugMode())
                     MelonLogger.Log("API request errored with " + c.Code + " - " + c.Error);
-                if (c.Code == 404 && whichObjectToCheck.activeInHierarchy)
+                if (c.Code == 404 && listsParent.gameObject.activeInHierarchy)
                 {
-                    FavCatMod.Database.CompletelyDeletePlayer(playerId);
+                    FavCatMod.Database.CompletelyDeleteWorld(picker.Id);
                     var menu = ExpansionKitApi.CreateCustomFullMenuPopup(LayoutDescription.WideSlimList);
                     menu.AddSpacer();
                     menu.AddSpacer();
-                    menu.AddLabel("This player is not available anymore (deleted)");
+                    menu.AddLabel("This world is not available anymore (deleted)");
                     menu.AddLabel("It has been removed from all favorite lists");
                     menu.AddSpacer();
                     menu.AddSpacer();
