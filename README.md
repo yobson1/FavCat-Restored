@@ -4,9 +4,10 @@ I highly recommend supporting the original VRCMods developers, as they're the on
 I haven't changed any of the functionality outside of reverting FavCat's VRC+ changes, but i'll try and keep this repo up to sync for future versions of VRC (I.E. for UIExpansionKit build req's).
 
 
-##Canny Tickets
-#### I recommend upvoting the Canny Tickets listed below, to show the VRChat team that these would be good additions to the game
-If you decide to comment on Canny, be respectful and avoid mentioning modding - the team still doesn't like it, obviously.
+## Canny Tickets
+#### I recommend upvoting the Canny Tickets listed below, to show the VRChat team that these would be good additions to the game!
+
+If you decide to comment on Canny, **be respectful** and **avoid mentioning modding** - the team still doesn't like it, obviously.  
 And yes, it will probably be ignored/forever hanging in "under review" like the majority of Canny posts. At least we'll have a nice big upvote number on our ignored posts.
 
 * [**Reconsider the approach to paywalling extra avatar favorite slots/groups**](https://feedback.vrchat.com/vrchat-plus-feedback/p/reconsider-the-approach-to-paywalling-extra-avatar-favorite-slotsgroups)
