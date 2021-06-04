@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using FavCat.Adapters;
 using FavCat.CustomLists;
@@ -11,13 +12,14 @@ using FavCat.Database.Stored;
 using MelonLoader;
 using UIExpansionKit.API;
 using UIExpansionKit.Components;
+using UnhollowerRuntimeLib;
 using UnityEngine;
 using UnityEngine.UI;
 using Object = UnityEngine.Object;
 
 namespace FavCat.Modules
 {
-    public abstract class ExtendedFavoritesModuleBase<T> where T: class
+    public abstract class ExtendedFavoritesModuleBase<T> where T: class, INamedStoredObject
     {
         protected const string SearchCategoryName = "Local search results";
         protected const string ExpandEnforcerGameObjectName = "ExpandEnforcer";
@@ -619,9 +621,17 @@ namespace FavCat.Modules
                     customMenu.Hide();
                     ReFetchFavoritesProcessor.ReFetchFavorites().NoAwait();
                 });
-            
-            customMenu.AddSpacer();
-            
+
+            if (ExportProcessor.IsExportingFavorites)
+                customMenu.AddLabel($"Exporting: {ExportProcessor.ProcessedCategories} / {ExportProcessor.TotalCategories}");
+            else
+                customMenu.AddSimpleButton("Export favorites",
+                    () =>
+                    {
+                        customMenu.Hide();
+                        ExportProcessor.DoExportFavorites(Favorites).NoAwait();
+                    });
+
             customMenu.AddSimpleButton("Close", customMenu.Hide);
             
             customMenu.Show();

@@ -1,12 +1,14 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using FavCat.Adapters;
 using FavCat.CustomLists;
 using FavCat.Database.Stored;
 using MelonLoader;
 using UIExpansionKit.API;
+using UIExpansionKit.Components;
 using UnhollowerRuntimeLib;
 using UnityEngine;
 using UnityEngine.UI;
@@ -15,7 +17,7 @@ using VRC.UI;
 
 namespace FavCat.Modules
 {
-    public class AvatarModule : ExtendedFavoritesModuleBase<StoredAvatar>
+    public sealed class AvatarModule : ExtendedFavoritesModuleBase<StoredAvatar>
     {
         private readonly PageAvatar myPageAvatar;
         
@@ -151,7 +153,7 @@ namespace FavCat.Modules
                     var menu = ExpansionKitApi.CreateCustomFullMenuPopup(LayoutDescription.WideSlimList);
                     menu.AddSpacer();
                     menu.AddSpacer();
-                    menu.AddLabel("This avatar is not available anymore (deleted)");
+                    menu.AddLabel("This avatar is not available anymore (deleted or privated)");
                     menu.AddLabel("It has been removed from all favorite lists");
                     menu.AddSpacer();
                     menu.AddSpacer();
@@ -165,18 +167,20 @@ namespace FavCat.Modules
         internal override void Update()
         {
             if (!myInitialised) return;
-
-            if (myPageAvatar.field_Public_SimpleAvatarPedestal_0 != null && myPageAvatar.field_Public_SimpleAvatarPedestal_0.field_Internal_ApiAvatar_0 != null &&
-                !myCurrentUiAvatarId.Equals(myPageAvatar.field_Public_SimpleAvatarPedestal_0.field_Internal_ApiAvatar_0?.id))
-            {
-                var apiAvatar = myPageAvatar != null ? myPageAvatar.field_Public_SimpleAvatarPedestal_0 != null ? myPageAvatar.field_Public_SimpleAvatarPedestal_0.field_Internal_ApiAvatar_0 : null : null;
-                
-                myCurrentUiAvatarId = apiAvatar?.id ?? "";
-
-                RefreshFavButtons();
-            }
             
             base.Update();
+
+            var pedestal = myPageAvatar.field_Public_SimpleAvatarPedestal_0;
+            if (pedestal == null) return;
+            var apiAvatar = pedestal.field_Internal_ApiAvatar_0;
+            if (apiAvatar == null) return;
+            if (apiAvatar.id == myCurrentUiAvatarId) return;
+
+            myCurrentUiAvatarId = apiAvatar.id ?? "";
+
+            RefreshFavButtons();
+            if (apiAvatar.Populated)
+                FavCatMod.Database?.UpdateStoredAvatar(apiAvatar);
         }
 
         protected override void SearchButtonClicked()
