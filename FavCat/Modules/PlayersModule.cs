@@ -96,7 +96,7 @@ namespace FavCat.Modules
                     MelonLogger.Log("API request errored with " + c.Code + " - " + c.Error);
                 if (c.Code == 404 && whichObjectToCheck.activeInHierarchy)
                 {
-                    FavCatMod.Database.CompletelyDeletePlayer(playerId)
+                    FavCatMod.Database.CompletelyDeletePlayer(playerId);
                     var menu = ExpansionKitApi.CreateCustomFullMenuPopup(LayoutDescription.WideSlimList);
                     menu.AddSpacer();
                     menu.AddSpacer();

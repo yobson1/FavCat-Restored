@@ -29,7 +29,7 @@ namespace FavCat
                 TotalCategories = storedCategories.Count;
                 foreach (var category in storedCategories)
                 {
-                    var fileName = favorites.EntityType + "-" + SanitizeForFileName(category.CategoryName) + ".txt";
+                    var fileName = favorites.entityType + "-" + SanitizeForFileName(category.CategoryName) + ".txt";
                     using var writer = new StreamWriter(exportDir + "/" + fileName);
                     foreach (var listFavorite in favorites.ListFavorites(category.CategoryName).ToList())
                     {
