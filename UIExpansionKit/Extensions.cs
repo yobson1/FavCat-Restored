@@ -1,4 +1,5 @@
 using UnityEngine;
+using VRCSDK2;
 
 namespace UIExpansionKit
 {
@@ -22,6 +23,12 @@ namespace UIExpansionKit
             if (result == null) 
                 result  = obj.AddComponent<T>();
             return result;
+        }
+
+        internal static void AddUiShapeWithTriggerCollider(this GameObject obj)
+        {
+            obj.AddComponent<VRC_UiShape>().Awake(); // Awake is not called on disabled object, so call it manually; calling it twice doesn't cause issues
+            obj.GetComponent<BoxCollider>().isTrigger = true;
         }
     }
 }

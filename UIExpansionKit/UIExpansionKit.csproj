@@ -4,11 +4,17 @@
         <VrcReferences>true</VrcReferences>
         <LangVersion>latest</LangVersion>
         <UseAltLibs>true</UseAltLibs>
-        <AssemblyVersion>0.2.5.0</AssemblyVersion>
+        <AssemblyVersion>0.3.1.0</AssemblyVersion>
+        <DefineConstants>CUSTOMIZED_MOD_INTERNAL</DefineConstants>
     </PropertyGroup>
     <ItemGroup>
+      <Compile Include="..\Common\CustomizedMelonMod.cs" Link="Common\CustomizedMelonMod.cs" />
+      <Compile Include="..\Common\LoaderIntegrityCheck.cs" Link="Common\LoaderIntegrityCheck.cs" />
+    </ItemGroup>
+    <ItemGroup>
         <EmbeddedResource Include="modui.assetbundle" />
-        <EmbeddedResource Include="_dummy_.dll" />
-        <EmbeddedResource Include="_dummy2_.dll" />
+    </ItemGroup>
+    <ItemGroup>
+      <Folder Include="Common\" />
     </ItemGroup>
 </Project>

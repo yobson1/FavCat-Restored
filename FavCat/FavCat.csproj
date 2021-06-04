@@ -15,10 +15,15 @@
   <Import Project="$(MsBuildThisFileDirectory)/../ILRepack/ILRepack.Lib.MSBuild.Task.targets" />
   <ItemGroup>
     <None Remove="extraui" />
+    <Compile Include="..\Common\CustomizedMelonMod.cs" Link="Common\CustomizedMelonMod.cs" />
+    <Compile Include="..\Common\LoaderIntegrityCheck.cs" Link="Common\LoaderIntegrityCheck.cs" />
     <EmbeddedResource Include="extraui" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\UIExpansionKit\UIExpansionKit.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Common\" />
   </ItemGroup>
 
   <Target Name="ILRepack" AfterTargets="Build">

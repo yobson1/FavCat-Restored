@@ -10,15 +10,16 @@ using UIExpansionKit.Components;
 using UnhollowerRuntimeLib;
 using UnityEngine;
 using UnityEngine.UI;
+using VRC.UserCamera;
 using VRCSDK2;
 using Object = UnityEngine.Object;
 
-[assembly:MelonInfo(typeof(UiExpansionKitMod), "UI Expansion Kit", "0.2.5", "knah", "https://github.com/knah/VRCMods")]
+[assembly:MelonInfo(typeof(UiExpansionKitMod), "UI Expansion Kit", "0.3.1", "knah", "https://github.com/knah/VRCMods")]
 [assembly:MelonGame("VRChat", "VRChat")]
 
 namespace UIExpansionKit
 {
-    public class UiExpansionKitMod : MelonMod
+    internal class UiExpansionKitMod : CustomizedMelonMod
     {
         internal static UiExpansionKitMod Instance;
         
@@ -30,6 +31,7 @@ namespace UIExpansionKit
 
         private GameObject myInputPopup;
         private GameObject myInputKeypadPopup;
+        internal Transform myCameraExpandoRoot;
         
         private static readonly List<(ExpandedMenu, string, bool isFullMenu)> GameObjectToCategoryList = new List<(ExpandedMenu, string, bool)>
         {
@@ -60,20 +62,12 @@ namespace UIExpansionKit
         
         internal static bool AreSettingsDirty = false;
 
-        public event Action QuickMenuClosed;
-        public event Action FullMenuClosed;
-        public event Action<ExpandedMenu> OnMenuOpened;
-
-        public UiExpansionKitMod()
-        {
-            LoaderIntegrityCheck.CheckIntegrity();
-        }
-        
         public override void OnApplicationStart()
         {
             Instance = this;
             ClassInjector.RegisterTypeInIl2Cpp<EnableDisableListener>();
             ClassInjector.RegisterTypeInIl2Cpp<DestroyListener>();
+            ClassInjector.RegisterTypeInIl2Cpp<CameraExpandoHandler>();
             
             ExpansionKitSettings.RegisterSettings();
             ExpansionKitSettings.PinsEntry.OnValueChangedUntyped += UpdateQuickMenuPins;
@@ -119,16 +113,20 @@ namespace UIExpansionKit
             
             // attach it to QuickMenu. VRChat changes render queue on QM contents on world load that makes it render properly
             myStuffBundle.StoredThingsParent.transform.SetParent(QuickMenu.prop_QuickMenu_0.transform);
-            
-            myInputPopup = GameObject.Find("UserInterface/MenuContent/Popups/InputPopup");
-            myInputKeypadPopup = GameObject.Find("UserInterface/MenuContent/Popups/InputKeypadPopup");
 
-            var listener = myInputPopup.GetOrAddComponent<EnableDisableListener>();
-            listener.OnEnabled += UpdateModSettingsVisibility;
-            listener.OnDisabled += UpdateModSettingsVisibility;
-            listener = myInputKeypadPopup.GetOrAddComponent<EnableDisableListener>();
-            listener.OnEnabled += UpdateModSettingsVisibility;
-            listener.OnDisabled += UpdateModSettingsVisibility;
+            var delegatesToInvoke = ExpansionKitApi.onUiManagerInitDelegateList;
+            ExpansionKitApi.onUiManagerInitDelegateList = null;
+            foreach (var action in delegatesToInvoke)
+            {
+                try
+                {
+                    action();
+                }
+                catch (Exception ex)
+                {
+                    MelonLogger.Error($"Error while invoking UI-manager-init delegate {action.GetType().FullName}: {ex}");
+                }
+            }
 
             foreach (var coroutine in ExpansionKitApi.ExtraWaitCoroutines)
             {
@@ -140,21 +138,35 @@ namespace UIExpansionKit
                     }
                     catch (Exception ex)
                     {
-                        MelonLogger.Error(
-                            $"Error while waiting for init of coroutine with type {coroutine.GetType().FullName}: {ex.ToString()}");
+                        MelonLogger.Error($"Error while waiting for init of coroutine with type {coroutine.GetType().FullName}: {ex}");
+                        break;
                     }
                     yield return coroutine.Current;
                 }
             }
 
+            myInputPopup = GameObject.Find("UserInterface/MenuContent/Popups/InputPopup");
+            myInputKeypadPopup = GameObject.Find("UserInterface/MenuContent/Popups/InputKeypadPopup");
+            
+            // Wait an extra frame to ve very sure that all other mods had the chance to register buttons in their wait-for-ui-manager coroutine
+            yield return null;
+
+            var listener = myInputPopup.GetOrAddComponent<EnableDisableListener>();
+            listener.OnEnabled += UpdateModSettingsVisibility;
+            listener.OnDisabled += UpdateModSettingsVisibility;
+            listener = myInputKeypadPopup.GetOrAddComponent<EnableDisableListener>();
+            listener.OnEnabled += UpdateModSettingsVisibility;
+            listener.OnDisabled += UpdateModSettingsVisibility;
+
             GameObject.Find("UserInterface/QuickMenu/QuickMenu_NewElements/_Background")
-                .AddComponent<EnableDisableListener>().OnDisabled += () => QuickMenuClosed?.Invoke();
+                .AddComponent<EnableDisableListener>().OnDisabled += BuiltinUiUtils.InvokeQuickMenuClosed;
             
             GameObject.Find("UserInterface/MenuContent/Backdrop/Backdrop")
-                .AddComponent<EnableDisableListener>().OnDisabled += () => FullMenuClosed?.Invoke();
+                .AddComponent<EnableDisableListener>().OnDisabled += BuiltinUiUtils.InvokeFullMenuClosed;
 
             DecorateFullMenu();
             DecorateMenuPages();
+            DecorateCamera();
         }
 
         private void DecorateMenuPages()
@@ -206,7 +218,7 @@ namespace UIExpansionKit
                     listener.OnEnabled += () =>
                     {
                         expando.SetActive(myHasContents[categoryEnum]);
-                        OnMenuOpened?.Invoke(categoryEnum);
+                        BuiltinUiUtils.InvokeMenuOpened(categoryEnum);
                     };
                     listener.OnDisabled += () => expando.SetActive(false);
 
@@ -236,7 +248,7 @@ namespace UIExpansionKit
                     listener.OnEnabled += () =>
                     {
                         expando.SetActive(myHasContents[categoryEnum]);
-                        OnMenuOpened?.Invoke(categoryEnum);
+                        BuiltinUiUtils.InvokeMenuOpened(categoryEnum);
                     };
                     listener.OnDisabled += () => expando.SetActive(false);
                     
@@ -252,6 +264,66 @@ namespace UIExpansionKit
                 
                 UpdateCategoryVisibility(valueTuple.Item1);
             }
+        }
+
+        private void DecorateCamera()
+        {
+            var cameraController = UserCameraController.field_Internal_Static_UserCameraController_0;
+            if (cameraController == null)
+            {
+                MelonLogger.Warning("Camera controller not found, not decorating the camera");
+                return;
+            }
+            
+            var cameraTransform = cameraController.transform.Find("ViewFinder");
+            
+            var expando = Object.Instantiate(myStuffBundle.QuickMenuExpando, cameraTransform, false);
+            myMenuRoots[ExpandedMenu.Camera] = expando;
+
+            var transform = expando.transform;
+            myCameraExpandoRoot = transform;
+            transform.localScale = Vector3.one * 0.00077f;
+            var handler = expando.AddComponent<CameraExpandoHandler>();
+            handler.CameraTransform = cameraTransform;
+            handler.PlayerCamera = Camera.main.transform; // todo: the actual camera?
+
+            var toggleButton = transform.Find("QuickMenuExpandoToggle");
+            var content = transform.Find("Content");
+            toggleButton.gameObject.AddUiShapeWithTriggerCollider();
+            content.gameObject.AddUiShapeWithTriggerCollider();
+            var toggleComponent = toggleButton.GetComponent<Toggle>();
+
+            if (ExpansionKitSettings.IsCameraExpandoStartsCollapsed()) 
+                toggleComponent.isOn = false;
+
+            var listener = cameraTransform.gameObject.GetOrAddComponent<EnableDisableListener>();
+            listener.OnEnabled += () =>
+            {
+                expando.SetActive(myHasContents[ExpandedMenu.Camera]);
+                BuiltinUiUtils.InvokeMenuOpened(ExpandedMenu.Camera);
+                // seems like VRC code enables all camera children?
+                SetActiveAfterDelay(content.gameObject, toggleComponent.isOn);
+            };
+            listener.OnDisabled += () => expando.SetActive(false);
+
+            FillQuickMenuExpando(expando, ExpandedMenu.Camera);
+
+            expando.GetOrAddComponent<EnableDisableListener>().OnEnabled += () =>
+            {
+                MelonCoroutines.Start(ResizeExpandoAfterDelay(expando));
+            };
+
+            SetLayerRecursively(expando, 4);
+        }
+
+        public override void OnUpdate()
+        {
+            TaskUtilities.ourMainThreadQueue.Flush();
+        }
+
+        public override void OnGUI()
+        {
+            TaskUtilities.ourFrameEndQueue.Flush();
         }
 
         private static IEnumerator ResizeExpandoAfterDelay(GameObject expando)
@@ -275,6 +347,9 @@ namespace UIExpansionKit
             expandoRectTransform.sizeDelta = new Vector2(expandoRectTransform.sizeDelta.x, 100 * targetRows + 5);
             expandoRectTransform.anchoredPosition = oldPosition;
             expando.transform.Find("Content").GetComponent<VRC_UiShape>().Awake(); // adjust the box collider for raycasts
+            
+            expando.transform.Find("Content").gameObject.SetActive(totalButtons != 0);
+            expando.transform.Find("QuickMenuExpandoToggle").gameObject.SetActive(totalButtons != 0);
         }
 
         private void FillBigMenuExpando(GameObject expando, ExpandedMenu categoryEnum)
@@ -390,6 +465,18 @@ namespace UIExpansionKit
             }
             
             DoResizeExpando(expando);
+        }
+
+        private static void SetActiveAfterDelay(GameObject obj, bool active)
+        {
+            MelonCoroutines.Start(SetActiveAfterDelayImpl(obj, active));
+        }
+
+        private static IEnumerator SetActiveAfterDelayImpl(GameObject gameObject, bool active)
+        {
+            yield return null;
+            yield return null;
+            gameObject.SetActive(active);
         }
     }
 }
