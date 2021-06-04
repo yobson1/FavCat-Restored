@@ -157,26 +157,26 @@ namespace FavCat.Modules
             VRCUiManager.prop_VRCUiManager_0.Method_Public_Void_String_Boolean_0("UserInterface/MenuContent/Screens/UserInfo", true);
             var friendState = APIUser.IsFriendsWith(user.id)
                 ? (user.statusValue == APIUser.UserStatus.Offline
-                    ? PageUserInfo.EnumNPublicSealedvaNoOnOfSeReBlInFa9vUnique.OfflineFriend
-                    : PageUserInfo.EnumNPublicSealedvaNoOnOfSeReBlInFa9vUnique.OnlineFriend)
-                : PageUserInfo.EnumNPublicSealedvaNoOnOfSeReBlInFa9vUnique.NotFriends;
+                    ? PageUserInfo.EnumNPublicSealedvaNoOnOfSeReBlInFa10Unique.OfflineFriend
+                    : PageUserInfo.EnumNPublicSealedvaNoOnOfSeReBlInFa10Unique.OnlineFriend)
+                : PageUserInfo.EnumNPublicSealedvaNoOnOfSeReBlInFa10Unique.NotFriends;
 
             SetUserPageUser(PageUserInfo, user, friendState, UiUserList.EnumNPublicSealedvaNoInFrOnOfSeInFa9vUnique.FavoriteFriends);
         }
 
         private static
-            Action<PageUserInfo, APIUser, PageUserInfo.EnumNPublicSealedvaNoOnOfSeReBlInFa9vUnique,
+            Action<PageUserInfo, APIUser, PageUserInfo.EnumNPublicSealedvaNoOnOfSeReBlInFa10Unique,
                 UiUserList.EnumNPublicSealedvaNoInFrOnOfSeInFa9vUnique>? ourSetUserInfo;
 
-        private void SetUserPageUser(PageUserInfo pageUserInfo, APIUser user, PageUserInfo.EnumNPublicSealedvaNoOnOfSeReBlInFa9vUnique enumA,
+        private void SetUserPageUser(PageUserInfo pageUserInfo, APIUser user, PageUserInfo.EnumNPublicSealedvaNoOnOfSeReBlInFa10Unique enumA,
             UiUserList.EnumNPublicSealedvaNoInFrOnOfSeInFa9vUnique enumB)
         {
             if (ourSetUserInfo == null)
             {
                 var targetMethod = typeof(PageUserInfo).GetMethods().Single(it =>
-                    it.Name.StartsWith("Method_Public_Void_APIUser_EnumNPublicSealedvaNoOnOfSeReBlInFa9vUnique_EnumNPublicSealedvaNoInFrOnOfSeInFa9vUnique_") && XrefScanner.XrefScan(it).Any(jt => jt.Type == XrefType.Global && jt.ReadAsObject()?.ToString() == "online in current world"));
-                ourSetUserInfo = (Action<PageUserInfo, APIUser, PageUserInfo.EnumNPublicSealedvaNoOnOfSeReBlInFa9vUnique,
-                    UiUserList.EnumNPublicSealedvaNoInFrOnOfSeInFa9vUnique>) Delegate.CreateDelegate(typeof(Action<PageUserInfo, APIUser, PageUserInfo.EnumNPublicSealedvaNoOnOfSeReBlInFa9vUnique,
+                    it.Name.StartsWith("Method_Public_Void_APIUser_EnumNPublicSealedvaNoOnOfSeReBlInFa10Unique_EnumNPublicSealedvaNoInFrOnOfSeInFa9vUnique_") && XrefScanner.XrefScan(it).Any(jt => jt.Type == XrefType.Global && jt.ReadAsObject()?.ToString() == "online in current world"));
+                ourSetUserInfo = (Action<PageUserInfo, APIUser, PageUserInfo.EnumNPublicSealedvaNoOnOfSeReBlInFa10Unique,
+                    UiUserList.EnumNPublicSealedvaNoInFrOnOfSeInFa9vUnique>) Delegate.CreateDelegate(typeof(Action<PageUserInfo, APIUser, PageUserInfo.EnumNPublicSealedvaNoOnOfSeReBlInFa10Unique,
                     UiUserList.EnumNPublicSealedvaNoInFrOnOfSeInFa9vUnique>), targetMethod);
             }
 
