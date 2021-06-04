@@ -8,3 +8,4 @@ LibsAlt/*.dll
 *.user
 /Output
 IKTweaks/FinalIK
+.vs
