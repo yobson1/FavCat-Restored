@@ -16,10 +16,10 @@ using UnhollowerRuntimeLib;
 using UnityEngine;
 using UnityEngine.Networking;
 using VRC.Core;
-using Object = UnityEngine.Object;
 using ImageDownloaderClosure = ImageDownloader.__c__DisplayClass11_1;
+using Object = UnityEngine.Object;
 
-[assembly:MelonInfo(typeof(FavCatMod), "FavCatRestored", "1.1.2", "Felkon (Original By Knah)", "https://github.com/FelkonEx/FavCat-Restored")]
+[assembly:MelonInfo(typeof(FavCatMod), "FavCatRestored", "1.1.3", "Felkon (Original By Knah)", "https://github.com/FelkonEx/FavCat-Restored")]
 [assembly:MelonGame("VRChat", "VRChat")]
 
 namespace FavCat
@@ -31,7 +31,7 @@ namespace FavCat
 
         internal AvatarModule? AvatarModule;
         private WorldsModule? myWorldsModule;
-        private PlayersModule? playerModule;
+        internal PlayersModule? playerModule;
         
         private static bool ourInitDone;
         
@@ -48,8 +48,8 @@ namespace FavCat
             
             FavCatSettings.RegisterSettings();
             
-            MelonLogger.Log("Creating database");
-            Database = new LocalStoreDatabase(FavCatSettings.DatabasePath, FavCatSettings.ImageCachePath);
+            MelonDebug.Msg("Creating database");
+            Database = new LocalStoreDatabase(FavCatSettings.DatabasePath.Value, FavCatSettings.ImageCachePath.Value);
             
             Database.ImageHandler.TrimCache(FavCatSettings.MaxCacheSizeBytes).NoAwait();
 
@@ -97,35 +97,35 @@ namespace FavCat
 
             try
             {
-                if (FavCatSettings.IsEnableAvatarFavs)
+                if (FavCatSettings.EnableAvatarFavs.Value)
                     AvatarModule = new AvatarModule();
             }
             catch (Exception ex)
             {
-                MelonLogger.LogError($"Exception in avatar module init: {ex}");
+                MelonLogger.Error($"Exception in avatar module init: {ex}");
             }
 
             try
             {
-                if (FavCatSettings.IsEnableWorldFavs)
+                if (FavCatSettings.EnableWorldFavs.Value)
                     myWorldsModule = new WorldsModule();
             }
             catch (Exception ex)
             {
-                MelonLogger.LogError($"Exception in world module init: {ex}");
+                MelonLogger.Error($"Exception in world module init: {ex}");
             }
             
             try
             {
-                if (FavCatSettings.IsEnablePlayerFavs)
+                if (FavCatSettings.EnablePlayerFavs.Value)
                     playerModule = new PlayersModule();
             }
             catch (Exception ex)
             {
-                MelonLogger.LogError($"Exception in player module init: {ex}");
+                MelonLogger.Error($"Exception in player module init: {ex}");
             }
 
-            MelonLogger.Log("Initialized!");
+            MelonDebug.Msg("Initialized!");
             ourInitDone = true;
         }
 
@@ -173,14 +173,14 @@ namespace FavCat
                         typeof(ApiModel).GetMethods().Single(it =>
                             it.Name == nameof(ApiModel.SetApiFieldsFromJson) && it.GetParameters().Length == 2))
                     .GetValue(null);
-                Imports.Hook((IntPtr) (&originalMethodPointer), typeof(ApiSnifferPatch).GetMethod(nameof(ApiSnifferStatic))!.MethodHandle.GetFunctionPointer());
+                MelonUtils.NativeHookAttach((IntPtr)(&originalMethodPointer), typeof(ApiSnifferPatch).GetMethod(nameof(ApiSnifferStatic))!.MethodHandle.GetFunctionPointer());
                 ourOriginalApiPopulate = Marshal.GetDelegateForFunctionPointer<ApiPopulateDelegate>(originalMethodPointer);
             }
 
             unsafe
             {
                 var originalMethodPointer = *(IntPtr*) (IntPtr) UnhollowerUtils.GetIl2CppMethodInfoPointerFieldForGeneratedMethod(ImageDownloaderClosureType.GetMethod(nameof(ImageDownloaderClosure._DownloadImageInternal_b__0))).GetValue(null);
-                Imports.Hook((IntPtr) (&originalMethodPointer), typeof(ApiSnifferPatch).GetMethod(nameof(ImageSnifferPatch))!.MethodHandle.GetFunctionPointer());
+                MelonUtils.NativeHookAttach((IntPtr)(&originalMethodPointer), typeof(ApiSnifferPatch).GetMethod(nameof(ImageSnifferPatch))!.MethodHandle.GetFunctionPointer());
                 ourOriginalOnDone = Marshal.GetDelegateForFunctionPointer<ImageDownloaderOnDoneDelegate>(originalMethodPointer);
             }
         }
@@ -205,8 +205,8 @@ namespace FavCat
 
                 if (webRequest.downloadedBytes > 1024 * 1024)
                 {
-                    if (Imports.IsDebugMode())
-                        MelonLogger.Log($"Ignored downloaded image from {url} because it's bigger than 1 MB");
+                    if (MelonDebug.IsEnabled())
+                        MelonDebug.Msg($"Ignored downloaded image from {url} because it's bigger than 1 MB");
                     return; // ignore images over 1 megabyte, 256-pixel previews should not be that big
                 }
 
@@ -214,7 +214,7 @@ namespace FavCat
             }
             catch (Exception ex)
             {
-                MelonLogger.LogError($"Exception in image downloader patch: {ex}");
+                MelonLogger.Error($"Exception in image downloader patch: {ex}");
             }
         }
 
@@ -234,7 +234,7 @@ namespace FavCat
             }
             catch (Exception ex)
             {
-                MelonLogger.LogError($"Exception in API sniffer patch: {ex}");
+                MelonLogger.Error($"Exception in API sniffer patch: {ex}");
             }
 
             return result;

@@ -54,7 +54,7 @@ namespace FavCat.Modules
 
                         buttonText!.text = $"{(!Favorites.IsFavorite(currentUser.id, storedCategory.CategoryName) ? "Favorite to" : "Unfavorite from")} {storedCategory.CategoryName}";
                         
-                        if (FavCatSettings.IsHidePopupAfterFav) availableListsMenu.Hide();
+                        if (FavCatSettings.HidePopupAfterFav.Value) availableListsMenu.Hide();
                     }, 
                     o => buttonText = o.GetComponentInChildren<Text>());
             }
@@ -92,8 +92,8 @@ namespace FavCat.Modules
             }), new Action<ApiContainer>(c =>
             {
                 myLastRequestedPlayer = "";
-                if (Imports.IsDebugMode())
-                    MelonLogger.Log("API request errored with " + c.Code + " - " + c.Error);
+                if (MelonDebug.IsEnabled())
+                    MelonDebug.Msg("API request errored with " + c.Code + " - " + c.Error);
                 if (c.Code == 404 && whichObjectToCheck.activeInHierarchy)
                 {
                     FavCatMod.Database.CompletelyDeletePlayer(playerId);

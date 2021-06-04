@@ -8,15 +8,6 @@ namespace FavCat
 {
     public static class Extensions
     {
-        public static void NoAwait(this Task task)
-        {
-            task.ContinueWith(tsk =>
-            {
-                if (tsk.IsFaulted)
-                    MelonLogger.LogError($"Free-floating Task failed with exception: {tsk.Exception}");
-            });
-        }
-        
         internal static string StripParenthesis(this string s)
         {
             return Regex.Replace(s, "\\s*\\([0-9\\s]*\\)\\s*", "", RegexOptions.None);

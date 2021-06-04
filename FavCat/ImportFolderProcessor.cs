@@ -45,7 +45,7 @@ namespace FavCat
                 }
                 catch (Exception ex)
                 {
-                    MelonLogger.Log($"Import of {file} failed: {ex}");
+                    MelonDebug.Msg($"Import of {file} failed: {ex}");
                 }
             }
 
@@ -58,7 +58,7 @@ namespace FavCat
         internal static async Task ProcessTextFile(string filePath)
         {
             var fileName = Path.GetFileName(filePath);
-            MelonLogger.Log($"Started avatar import process for file {fileName}");
+            MelonDebug.Msg($"Started avatar import process for file {fileName}");
             
             var toAdd = new List<string>();
             { // file access block
@@ -117,7 +117,7 @@ namespace FavCat
                 avatarModule.RefreshFavButtons();
             }
             
-            MelonLogger.Log($"Done importing {fileName}");
+            MelonDebug.Msg($"Done importing {fileName}");
             File.Delete(filePath);
         }
         
@@ -126,7 +126,7 @@ namespace FavCat
             return Task.Run(() =>
             {
                 var fileName = Path.GetFileName(foreignStorePath);
-                MelonLogger.Log($"Started merging database with {fileName}");
+                MelonDebug.Msg($"Started merging database with {fileName}");
                 using var storeDatabase = new LiteDatabase(new ConnectionString {Filename = foreignStorePath, ReadOnly = true, Connection = ConnectionType.Direct});
             
                 var storedAvatars = storeDatabase.GetCollection<StoredAvatar>("avatars");
@@ -157,7 +157,7 @@ namespace FavCat
                         FavCatMod.Database.myStoredWorlds.Upsert(storedWorld);
                 }
                 
-                MelonLogger.Log($"Done merging database with {fileName}");
+                MelonDebug.Msg($"Done merging database with {fileName}");
             });
         }
     }
