@@ -109,11 +109,10 @@ namespace FavCat.Modules
                 bool favorited = FavCatMod.Database.AvatarFavorites.IsFavorite(myCurrentUiAvatarId, customPickerList.Key);
                     
                 var isNonPublic = apiAvatar?.releaseStatus != "public";
-                var enabled = !isNonPublic || favorited || apiAvatar?.authorId == APIUser.CurrentUser.id;
                 if (favorited)
                     customPickerList.Value.SetFavButtonText(isNonPublic ? "Unfav (p)" : "Unfav", true);
                 else
-                    customPickerList.Value.SetFavButtonText(isNonPublic ? (enabled ? "Fav (p)" : "Private") : "Fav", enabled);
+                    customPickerList.Value.SetFavButtonText(isNonPublic ? "Fav (p)": "Fav", true);
             }
         }
 
