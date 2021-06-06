@@ -41,7 +41,7 @@ namespace FavCat.Modules
 
         protected void PlaySound()
         {
-            if (!FavCatSettings.DoClickSounds) return;
+            if (!FavCatSettings.MakeClickSounds.Value) return;
             var soundPlayer = VRCUiSoundPlayer.field_Private_Static_VRCUiSoundPlayer_0;
             if (mySoundCollection == null || mySoundCollection.Click == null || soundPlayer == null) return;
 
@@ -50,11 +50,11 @@ namespace FavCat.Modules
         
         
         protected abstract void OnPickerSelected(IPickerElement picker);
-        protected abstract void OnFavButtonClicked(StoredCategory storedCategory);
-        protected abstract bool FavButtonsOnLists { get; }
+        protected abstract void OnFavButtonClicked(StoredCategory storedCategory); //REMOVED?
+        protected abstract bool FavButtonsOnLists { get; } //REMOVED?
         protected abstract void SortModelList(string sortCriteria, string category, List<(StoredFavorite?, T)> list);
         protected abstract IPickerElement WrapModel(StoredFavorite? favorite, T model);
-        protected internal abstract void RefreshFavButtons();
+        protected internal abstract void RefreshFavButtons(); //REMOVED?
         protected abstract void SearchButtonClicked();
 
 
@@ -239,8 +239,8 @@ namespace FavCat.Modules
             var knownLists = new Dictionary<String, (Transform ListTransform, string ListName, bool IsCustom)>();
             foreach (var list in GatherLists())
             {
-                if (Imports.IsDebugMode() && knownLists.ContainsKey(list.ListName))
-                    MelonLogger.Log($"List {list.ListName} is duplicated");
+                if (MelonDebug.IsEnabled() && knownLists.ContainsKey(list.ListName))
+                    MelonDebug.Msg($"List {list.ListName} is duplicated");
                 
                 knownLists[list.ListName] = list;
             }
@@ -553,7 +553,7 @@ namespace FavCat.Modules
             mySearchResult = null;
             if (results == null) return;
             
-            MelonLogger.Log("Local search done, {0} results", results.Count);
+            MelonDebug.Msg("Local search done, {0} results", results.Count);
 
             SortModelList(SearchList.Category.SortType, SearchCategoryName, results);
             SearchList.SetList(results.Select(it => WrapModel(null, it.it)), true);

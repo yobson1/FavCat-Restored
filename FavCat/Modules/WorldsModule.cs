@@ -68,7 +68,7 @@ namespace FavCat.Modules
 
                         buttonText!.text = $"{(!Favorites.IsFavorite(currentWorld.id, storedCategory.CategoryName) ? "Favorite to" : "Unfavorite from")} {storedCategory.CategoryName}";
                         
-                        if (FavCatSettings.IsHidePopupAfterFav) availableListsMenu.Hide();
+                        if (FavCatSettings.HidePopupAfterFav.Value) availableListsMenu.Hide();
                     }, 
                     o => buttonText = o.GetComponentInChildren<Text>());
             }
@@ -104,8 +104,8 @@ namespace FavCat.Modules
             }), new Action<ApiContainer>(c =>
             {
                 myLastRequestedWorld = "";
-                if (Imports.IsDebugMode())
-                    MelonLogger.Log("API request errored with " + c.Code + " - " + c.Error);
+                if (MelonDebug.IsEnabled())
+                    MelonDebug.Msg("API request errored with " + c.Code + " - " + c.Error);
                 if (c.Code == 404 && listsParent.gameObject.activeInHierarchy)
                 {
                     FavCatMod.Database.CompletelyDeleteWorld(picker.Id);
