@@ -64,7 +64,7 @@ namespace FavCat
 
         private static void AvatarPedestalPatch(ApiContainer __0)
         {
-            if (__0.Error != null || __0.Code != 200) return;
+            if (__0.Code != 200) return;
             var model = __0.Model?.TryCast<ApiAvatar>();
             if (model == null) return;
 
