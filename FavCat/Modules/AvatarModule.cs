@@ -136,14 +136,7 @@ namespace FavCat.Modules
 
                 FavCatMod.Database?.UpdateStoredAvatar(avatar);
 
-                var canUse = avatar.releaseStatus == "public" || avatar.authorId == APIUser.CurrentUser.id;
-                if (!canUse)
-                {
-                    myPageAvatar.field_Public_SimpleAvatarPedestal_0.DisplayErrorAvatar();
-                    myPageAvatar.field_Public_SimpleAvatarPedestal_0.field_Internal_ApiAvatar_0 = avatar; // set it directly here because refreshing will load it
-                }
-                else
-                    myPageAvatar.field_Public_SimpleAvatarPedestal_0.Refresh(avatar);
+                myPageAvatar.field_Public_SimpleAvatarPedestal_0.Refresh(avatar);
 
                 // VRC has a tendency to change visibility of its lists after pedestal refresh 
                 ReorderLists();
