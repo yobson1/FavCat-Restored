@@ -16,9 +16,9 @@ namespace FavCat
         private static DisplayErrorAvatarDelegate? ourDisplayErrorAvatarDelegate;
         private static PedestalRefreshDelegate? ourPedestalRefreshDelegate;
 
-        private static Action<ApiWorld>? ourShowWorldInfoPageDelegate;
+        private static Action<ApiWorld, string, bool>? ourShowWorldInfoPageDelegate;
 
-        public static void DisplayWorldInfoPage(ApiWorld world)
+        public static void DisplayWorldInfoPage(ApiWorld world, string instanceId, bool hasInstanceId)
         {
             if (ourShowWorldInfoPageDelegate == null)
             {
@@ -29,10 +29,10 @@ namespace FavCat
                             jt.Type == XrefType.Global && jt.ReadAsObject()?.ToString() ==
                             "UserInterface/MenuContent/Screens/WorldInfo"));
 
-                ourShowWorldInfoPageDelegate = (Action<ApiWorld>) Delegate.CreateDelegate(typeof(Action<ApiWorld>), target);
+                ourShowWorldInfoPageDelegate = (Action<ApiWorld, string, bool>)Delegate.CreateDelegate(typeof(Action<ApiWorld, string, bool>), target);
             }
 
-            ourShowWorldInfoPageDelegate(world);
+            ourShowWorldInfoPageDelegate(world, instanceId, hasInstanceId);
         }
 
         public static void DisplayErrorAvatar(this SimpleAvatarPedestal @this)

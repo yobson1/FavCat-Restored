@@ -47,13 +47,13 @@ namespace FavCat.Modules
 
         private void DoSearchKnownAvatars()
         {
-            if (PlayersModule.PageUserInfo == null)
+            if (FavCatMod.PageUserInfo == null)
                 return;
             
             VRCUiManager.prop_VRCUiManager_0.Method_Public_Void_String_Boolean_0("UserInterface/MenuContent/Screens/Avatar", false);
             SetSearchListHeaderAndScrollToIt("Search running...");
-            LastSearchRequest = "Created by " + PlayersModule.PageUserInfo.field_Public_APIUser_0.displayName;
-            FavCatMod.Database.RunBackgroundAvatarSearchByUser(PlayersModule.PageUserInfo.field_Public_APIUser_0.id, AcceptSearchResult);
+            LastSearchRequest = "Created by " + FavCatMod.PageUserInfo.field_Public_APIUser_0.displayName;
+            FavCatMod.Database.RunBackgroundAvatarSearchByUser(FavCatMod.PageUserInfo.field_Public_APIUser_0.id, AcceptSearchResult);
         }
 
         private static Transform GetListsParent()
@@ -136,14 +136,7 @@ namespace FavCat.Modules
 
                 FavCatMod.Database?.UpdateStoredAvatar(avatar);
 
-                var canUse = avatar.releaseStatus == "public" || avatar.authorId == APIUser.CurrentUser.id;
-                if (!canUse)
-                {
-                    myPageAvatar.field_Public_SimpleAvatarPedestal_0.DisplayErrorAvatar();
-                    myPageAvatar.field_Public_SimpleAvatarPedestal_0.field_Internal_ApiAvatar_0 = avatar; // set it directly here because refreshing will load it
-                }
-                else
-                    myPageAvatar.field_Public_SimpleAvatarPedestal_0.Refresh(avatar);
+                myPageAvatar.field_Public_SimpleAvatarPedestal_0.Refresh(avatar);
 
                 // VRC has a tendency to change visibility of its lists after pedestal refresh 
                 ReorderLists();

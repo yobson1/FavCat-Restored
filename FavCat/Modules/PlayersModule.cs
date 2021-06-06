@@ -6,6 +6,7 @@ using FavCat.CustomLists;
 using FavCat.Database.Stored;
 using MelonLoader;
 using UIExpansionKit.API;
+using UIExpansionKit.Components;
 using UnhollowerRuntimeLib.XrefScans;
 using UnityEngine;
 using UnityEngine.UI;
@@ -16,20 +17,22 @@ namespace FavCat.Modules
 {
     public class PlayersModule : ExtendedFavoritesModuleBase<StoredPlayer>
     {
-        internal static PageUserInfo PageUserInfo;
-        
+        private static FriendsListManager ourFriendsListManager;
+
         public PlayersModule() : base(ExpandedMenu.SocialMenu, FavCatMod.Database.PlayerFavorites, GetListsParent(), false)
         {
             ExpansionKitApi.GetExpandedMenu(ExpandedMenu.UserDetailsMenu).AddSimpleButton("Local Favorite", ShowFavMenu);
-            
-            PageUserInfo = GameObject.Find("UserInterface/MenuContent/Screens/UserInfo").GetComponent<PageUserInfo>();
+
+            ourFriendsListManager = FriendsListManager.prop_FriendsListManager_0;
+
+            listsParent.GetComponent<EnableDisableListener>().OnEnabled += ResortAndRefreshLists;
         }
         
         private void ShowFavMenu()
         {
             var availableListsMenu = ExpansionKitApi.CreateCustomFullMenuPopup(LayoutDescription.WideSlimList);
-            var currentUser = PageUserInfo.field_Public_APIUser_0;
-            
+            var currentUser = FavCatMod.PageUserInfo.field_Public_APIUser_0;
+
             var storedCategories = GetCategoriesInSortedOrder();
 
             if (storedCategories.Count == 0)
@@ -133,6 +136,20 @@ namespace FavCat.Modules
                     comparison = (a, b) => (a.Fav?.AddedOn ?? DateTime.MinValue).CompareTo(b.Fav?.AddedOn ?? DateTime.MinValue) * (inverted ? -1 : 1);
                     break;
             }
+
+            if (FavCatSettings.SortPlayersByOnline.Value)
+            {
+                var oldComparison = comparison;
+                comparison = (a, b) =>
+                {
+                    var aOnline = IsPlayerOnline(a.Model.PlayerId);
+                    var bOnline = IsPlayerOnline(b.Model.PlayerId);
+                    var onlineCompare = -aOnline.CompareTo(bOnline);
+                    if (onlineCompare != 0) return onlineCompare;
+                    return oldComparison(a, b);
+                };
+            }
+
             avatars.Sort(comparison);
         }
 
@@ -154,7 +171,7 @@ namespace FavCat.Modules
                 });
         }
 
-        private void ShowUserPage(APIUser user)
+        private static void ShowUserPage(APIUser user)
         {
             VRCUiManager.prop_VRCUiManager_0.Method_Public_Void_String_Boolean_0("UserInterface/MenuContent/Screens/UserInfo", true);
             var friendState = APIUser.IsFriendsWith(user.id)
@@ -163,20 +180,20 @@ namespace FavCat.Modules
                     : PageUserInfo.EnumNPublicSealedvaNoOnOfSeReBlInFa10Unique.OnlineFriend)
                 : PageUserInfo.EnumNPublicSealedvaNoOnOfSeReBlInFa10Unique.NotFriends;
 
-            SetUserPageUser(PageUserInfo, user, friendState, UiUserList.EnumNPublicSealedvaNoInFrOnOfSeInFa9vUnique.FavoriteFriends);
+            SetUserPageUser(FavCatMod.PageUserInfo, user, friendState, UiUserList.EnumNPublicSealedvaNoInFrOnOfSeInFa9vUnique.FavoriteFriends);
         }
 
         private static
             Action<PageUserInfo, APIUser, PageUserInfo.EnumNPublicSealedvaNoOnOfSeReBlInFa10Unique,
                 UiUserList.EnumNPublicSealedvaNoInFrOnOfSeInFa9vUnique>? ourSetUserInfo;
 
-        private void SetUserPageUser(PageUserInfo pageUserInfo, APIUser user, PageUserInfo.EnumNPublicSealedvaNoOnOfSeReBlInFa10Unique enumA,
+        private static void SetUserPageUser(PageUserInfo pageUserInfo, APIUser user, PageUserInfo.EnumNPublicSealedvaNoOnOfSeReBlInFa10Unique enumA,
             UiUserList.EnumNPublicSealedvaNoInFrOnOfSeInFa9vUnique enumB)
         {
             if (ourSetUserInfo == null)
             {
                 var targetMethod = typeof(PageUserInfo).GetMethods().Single(it =>
-                    it.Name.StartsWith("Method_Public_Void_APIUser_EnumNPublicSealedvaNoOnOfSeReBlInFa10Unique_EnumNPublicSealedvaNoInFrOnOfSeInFa9vUnique_") && XrefScanner.XrefScan(it).Any(jt => jt.Type == XrefType.Global && jt.ReadAsObject()?.ToString() == "online in current world"));
+                    it.Name.StartsWith("Method_Public_Void_APIUser_EnumNPublicSealedvaNoOnOfSeReBlInFa10Unique_EnumNPublicSealedvaNoInFrOnOfSeInFa9vUnique_") && XrefScanner.XrefScan(it).Any(jt => jt.Type == XrefType.Global && jt.ReadAsObject()?.ToString() == " wants to be your friend"));
                 ourSetUserInfo = (Action<PageUserInfo, APIUser, PageUserInfo.EnumNPublicSealedvaNoOnOfSeReBlInFa10Unique,
                     UiUserList.EnumNPublicSealedvaNoInFrOnOfSeInFa9vUnique>) Delegate.CreateDelegate(typeof(Action<PageUserInfo, APIUser, PageUserInfo.EnumNPublicSealedvaNoOnOfSeReBlInFa10Unique,
                     UiUserList.EnumNPublicSealedvaNoInFrOnOfSeInFa9vUnique>), targetMethod);
@@ -184,5 +201,7 @@ namespace FavCat.Modules
 
             ourSetUserInfo(pageUserInfo, user, enumA, enumB);
         }
+
+        public static bool IsPlayerOnline(string id) => ourFriendsListManager?.field_Private_Dictionary_2_String_APIUser_0.ContainsKey(id) == true;
     }
 }
