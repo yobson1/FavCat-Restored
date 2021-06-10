@@ -1,7 +1,7 @@
 ---
 name: Bug report
 about: Tell me what's wrong
-title: ''
+title: "[BUG] "
 labels: bug
 assignees: FelkonEx
 
