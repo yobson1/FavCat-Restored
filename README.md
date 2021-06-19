@@ -1,7 +1,7 @@
 If there are any issues, **submit an issue ticket and i'll have a look** 👀
 
 This repo's fork will contain changes to revert the decision of having VRC+ to use any of the favoriting within FavCat, forked from the [original VRCMods repo](https://github.com/knah/VRCMods).
-I highly recommend supporting the original VRCMods developers, as they're the ones that set the foundation for FavCat.
+I highly recommend supporting Knah and the original VRCMods developers, as they're the ones that set the foundation for FavCat.
 
 I haven't changed any of the functionality outside of breaking-off the FavCat's VRChat+ things from the base repo's commit, and i won't be unless:
 * VRChat breaks the current version, and i need to fix it.
@@ -111,11 +111,10 @@ Then, you will have to put mod .dll files in the `Mods` folder of your game dire
 
 ## Building
 To build these, drop required libraries (found in `<vrchat instanll dir>/MelonLoader/Managed` after melonloader installation, list found in `Directory.Build.props`) into Libs folder, then use your IDE of choice to build.
- * Libs folder is intended for newest libraries (MelonLoader 0.3.0)
+ * Libs folder is intended for newest libraries (MelonLoader 0.4.0)
 
 ## License
 With the following exceptions, all mods here are provided under the terms of [GNU GPLv3 license](LICENSE)
 * ILRepack.Lib.MSBuild.Task is covered by [its own license](https://github.com/ravibpatel/ILRepack.Lib.MSBuild.Task/blob/master/LICENSE.md)
 * ILRepack is covered by [Apache 2.0 license](https://github.com/gluck/il-repack/blob/master/LICENSE)
 * UI Expansion Kit is additionally covered by [LGPLv3](UIExpansionKit/COPYING.LESSER) to allow other mods to link to it
-* IKTweaks source code is not covered by a permissive license and provided for reference purposes only
