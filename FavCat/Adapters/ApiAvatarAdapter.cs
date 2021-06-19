@@ -1,4 +1,5 @@
 using FavCat.CustomLists;
+using UnityEngine;
 using VRC.Core;
 
 namespace FavCat.Adapters
@@ -19,5 +20,8 @@ namespace FavCat.Adapters
         public bool SupportsDesktop => myAvatar.supportedPlatforms == ApiModel.SupportedPlatforms.StandaloneWindows || myAvatar.supportedPlatforms == ApiModel.SupportedPlatforms.All;
         public bool SupportsQuest => myAvatar.supportedPlatforms == ApiModel.SupportedPlatforms.Android || myAvatar.supportedPlatforms == ApiModel.SupportedPlatforms.All;
         public bool IsInaccessible => IsPrivate && myAvatar.authorId != APIUser.CurrentUser.id;
+
+        public Color? CornerIconColor => null;
+
     }
 }
