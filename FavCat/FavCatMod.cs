@@ -8,7 +8,7 @@ using FavCat;
 using FavCat.CustomLists;
 using FavCat.Database;
 using FavCat.Modules;
-using Harmony;
+using HarmonyLib;
 using MelonLoader;
 using UIExpansionKit.API;
 using UnhollowerBaseLib;
@@ -20,7 +20,7 @@ using VRC.UI;
 using ImageDownloaderClosure = ImageDownloader.__c__DisplayClass11_1;
 using Object = UnityEngine.Object;
 
-[assembly:MelonInfo(typeof(FavCatMod), "FavCatRestored", "1.1.4", "Felkon (Original mod By Knah)", "https://github.com/FelkonEx/FavCat-Restored")]
+[assembly:MelonInfo(typeof(FavCatMod), "FavCatRestored", "1.1.5", "Felkon (Original By Knah)", "https://github.com/FelkonEx/FavCat-Restored")]
 [assembly:MelonGame("VRChat", "VRChat")]
 
 namespace FavCat
@@ -56,7 +56,7 @@ namespace FavCat
 
             foreach (var methodInfo in typeof(AvatarPedestal).GetMethods(BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Public).Where(it => it.Name.StartsWith("Method_Private_Void_ApiContainer_") && it.GetParameters().Length == 1))
             {
-                Harmony.Patch(methodInfo, new HarmonyMethod(typeof(FavCatMod), nameof(AvatarPedestalPatch)));
+                HarmonyInstance.Patch(methodInfo, new HarmonyMethod(typeof(FavCatMod), nameof(AvatarPedestalPatch)));
             }
             
             DoAfterUiManagerInit(OnUiManagerInit);
