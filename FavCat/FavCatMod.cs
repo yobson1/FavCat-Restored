@@ -226,6 +226,8 @@ namespace FavCat
 
                 var maybeUser = apiModel.TryCast<APIUser>();
                 if (maybeUser != null) FavCatMod.Database?.UpdateStoredPlayer(maybeUser);
+                var maybeAvatar = apiModel.TryCast<ApiAvatar>();
+                if (maybeAvatar != null) FavCatMod.Database?.UpdateStoredAvatar(maybeAvatar);
                 var maybeWorld = apiModel.TryCast<ApiWorld>();
                 if (maybeWorld != null) FavCatMod.Database?.UpdateStoredWorld(maybeWorld);
             }
