@@ -1,3 +1,4 @@
+## FavCatRestored
 This repo's fork will contain changes to revert the decision of having VRC+ to use any of the favoriting within FavCat, forked from the [original VRCMods repo](https://github.com/knah/VRCMods).
 
 **I highly recommend supporting Knah and the original VRCMods developers**, as they're the ones that set the foundation for FavCat.
