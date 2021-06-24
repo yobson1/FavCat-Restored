@@ -2,6 +2,8 @@ This repo's fork will contain changes to revert the decision of having VRC+ to u
 
 **I highly recommend supporting Knah and the original VRCMods developers**, as they're the ones that set the foundation for FavCat.
 
+And, if there are any issues, **submit an issue ticket and i'll have a look** 👀 or alternatively, [join my (new) discord](https://discord.com/invite/YWKpph8b3J) 😎
+
 I haven't changed any of the functionality outside of breaking-off the FavCat's VRChat+ things from the base repo's commit, and i won't be unless:
 * VRChat breaks the current version, and i need to fix it.
 * There's some clean code changes in the original repo that clean up the existing FavCat.
@@ -9,8 +11,6 @@ I haven't changed any of the functionality outside of breaking-off the FavCat's 
 
 If you don't trust the releases i put up for whatever reason, `I suggest cloning this repo and building it yourself`.
 It's always safer if you build it yourself or understand how the code works, since you know exactly what's going into the `.dll` files that are generated.
-
-And, if there are any issues, **submit an issue ticket and i'll have a look** 👀
 
 ## See [original VRCMods repo](https://github.com/knah/VRCMods/blob/master/README.md) for original README file
 This one has just been yoinked and reverted.
