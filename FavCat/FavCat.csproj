@@ -41,6 +41,6 @@
       <IlRepackLibs Include="$(MsBuildThisFileDirectory)/../Libs" />
     </ItemGroup>
     <Message Text="MERGING: @(InputAssemblies->'%(Filename)') into $(OutputAssembly)" Importance="High" />
-    <ILRepack Internalize="true" LibraryPath="@(IlRepackLibs)" OutputFile="$(OutputPath)/$(AssemblyName)-merged.dll" InputAssemblies="@(InputAssemblies)" />
+    <ILRepack Internalize="true" LibraryPath="@(IlRepackLibs)" OutputFile="$(OutputPath)/$(AssemblyName)Restored.dll" InputAssemblies="@(InputAssemblies)" />
   </Target>
 </Project>
