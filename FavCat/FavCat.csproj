@@ -6,7 +6,7 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Nullable>enable</Nullable>
     <ClearOutputDirectory>False</ClearOutputDirectory>
-    <AssemblyVersion>1.1.5.2</AssemblyVersion>
+    <AssemblyVersion>1.1.5.3</AssemblyVersion>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="LiteDB" Version="5.0.9" />
@@ -15,8 +15,6 @@
   <Import Project="$(MsBuildThisFileDirectory)/../ILRepack/ILRepack.Lib.MSBuild.Task.targets" />
   <ItemGroup>
     <None Remove="extraui" />
-    <Compile Include="..\Common\CustomizedMelonMod.cs" Link="Common\CustomizedMelonMod.cs" />
-    <Compile Include="..\Common\LoaderIntegrityCheck.cs" Link="Common\LoaderIntegrityCheck.cs" />
     <EmbeddedResource Include="extraui" />
   </ItemGroup>
   <ItemGroup>
@@ -43,6 +41,6 @@
       <IlRepackLibs Include="$(MsBuildThisFileDirectory)/../Libs" />
     </ItemGroup>
     <Message Text="MERGING: @(InputAssemblies->'%(Filename)') into $(OutputAssembly)" Importance="High" />
-    <ILRepack Internalize="true" LibraryPath="@(IlRepackLibs)" OutputFile="$(OutputPath)/$(AssemblyName)-merged.dll" InputAssemblies="@(InputAssemblies)" />
+    <ILRepack Internalize="true" LibraryPath="@(IlRepackLibs)" OutputFile="$(OutputPath)/$(AssemblyName)Restored.dll" InputAssemblies="@(InputAssemblies)" />
   </Target>
 </Project>

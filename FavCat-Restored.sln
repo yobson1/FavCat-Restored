@@ -16,6 +16,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UIExpansionKit", "UIExpansi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FavCat", "FavCat\FavCat.csproj", "{4D6BD71E-7499-4FC8-8161-6224489DF668}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IntegrityCheckWeaver", "IntegrityCheckWeaver\IntegrityCheckWeaver.csproj", "{5D5E4629-D3E4-472A-9FD5-02328BF765C6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IntegrityCheckGenerator", "IntegrityCheckGenerator\IntegrityCheckGenerator.csproj", "{A53EABDB-3023-4D3E-8E30-71FFAAD6D8D3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,6 +34,14 @@ Global
 		{4D6BD71E-7499-4FC8-8161-6224489DF668}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4D6BD71E-7499-4FC8-8161-6224489DF668}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4D6BD71E-7499-4FC8-8161-6224489DF668}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5D5E4629-D3E4-472A-9FD5-02328BF765C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D5E4629-D3E4-472A-9FD5-02328BF765C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D5E4629-D3E4-472A-9FD5-02328BF765C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D5E4629-D3E4-472A-9FD5-02328BF765C6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A53EABDB-3023-4D3E-8E30-71FFAAD6D8D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A53EABDB-3023-4D3E-8E30-71FFAAD6D8D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A53EABDB-3023-4D3E-8E30-71FFAAD6D8D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A53EABDB-3023-4D3E-8E30-71FFAAD6D8D3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
