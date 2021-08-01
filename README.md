@@ -30,7 +30,7 @@ And yes, it will probably be ignored/forever hanging in "under review" like the 
 
 ## FavCat
 An all-in-one local favorites mod. Unlimited favorite lists with unlimited favorites in them and a searchable local database of content and players.  
-**Requires UI Expansion Kit 0.2.0 or newer**  
+**Requires UI Expansion Kit 0.3.4 or newer**  
 #### Features:
 * Unlimited lists (categories) for favorites, each of unlimited size
 * Lag-free even with large lists
@@ -117,7 +117,7 @@ Then, you will have to put mod .dll files in the `Mods` folder of your game dire
 
 ## Building
 To build these, drop required libraries (found in `<vrchat instanll dir>/MelonLoader/Managed` after melonloader installation, list found in `Directory.Build.props`) into Libs folder, then use your IDE of choice to build.
- * Libs folder is intended for newest libraries (MelonLoader 0.4.0)
+ * Libs folder is intended for newest libraries (MelonLoader 0.4.3)
 
 ## License
 With the following exceptions, all mods here are provided under the terms of [GNU GPLv3 license](LICENSE)
