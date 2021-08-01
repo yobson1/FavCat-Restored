@@ -20,7 +20,7 @@ using VRC.UI;
 using ImageDownloaderClosure = ImageDownloader.__c__DisplayClass11_1;
 using Object = UnityEngine.Object;
 
-[assembly:MelonInfo(typeof(FavCatMod), "FavCatRestored", "1.1.5.2", "Felkon (Original By Knah)", "https://github.com/FelkonEx/FavCat-Restored")]
+[assembly:MelonInfo(typeof(FavCatMod), "FavCatRestored", "1.1.5.3", "Felkon (Original By Knah)", "https://github.com/FelkonEx/FavCat-Restored")]
 [assembly:MelonGame("VRChat", "VRChat")]
 
 namespace FavCat
