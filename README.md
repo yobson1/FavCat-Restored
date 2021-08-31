@@ -3,7 +3,7 @@
 This repo's fork will contain changes to revert the decision of having VRC+ to use any of the favoriting within FavCat, forked from the [original VRCMods repo](https://github.com/knah/VRCMods).
 
 **I highly recommend supporting Knah and the original VRCMods developers**, as they're the ones that set the foundation for FavCat.
-And, if there are any issues, **submit an issue ticket and i'll have a look** 👀 or alternatively, [join my (new) discord](https://discord.com/invite/YWKpph8b3J) 😎
+If there are any issues, **submit an issue ticket and i'll have a look** 👀 or alternatively, [join my discord](https://discord.com/invite/YWKpph8b3J) 😎
 
 I haven't changed any of the functionality outside of breaking-off the FavCat's VRChat+ things from the base repo's commit, and i won't be unless:
 * VRChat breaks the current version, and i need to fix it.
@@ -97,13 +97,7 @@ Note that your favorites are stored in `favcat-favs.db` - don't send it to your 
 A long time ago this was based on Slaynash's [AvatarFav](https://github.com/Slaynash/AvatarFav) and [VRCTools](https://github.com/Slaynash/VRCTools), both licensed under the [MIT license](https://github.com/Slaynash/VRCTools/blob/master/LICENSE). Who knows how much of that still remains inside?
 
 ## UI Expansion Kit
-This mod provides additional UI panels for use by other mods, and a unified mod settings UI.  
-Some settings (currently boolean ones) can be pinned to quick menu for faster access.  
-Refer to [API](UIExpansionKit/API) for mod integration.  
-MirrorResolutionUnlimiter has an [example](MirrorResolutionUnlimiter/MirrorResolutionUnlimiterMod.cs) of soft dependency on this mod  
-EmojiPageButtons has an [example](EmojiPageButtons/EmojiPageButtonsMod.cs) for delaying button creation until your mod is done
- 
-This mod uses [Google Noto](https://www.google.com/get/noto/) font, licensed under [SIL Open Font License 1.1](https://scripts.sil.org/cms/scripts/page.php?site_id=nrsi&id=OFL).  
+View the original repo's readme for info.
 
 ## ILRepack
 There's a copy of [ILRepack.Lib.MSBuild.Task](https://github.com/ravibpatel/ILRepack.Lib.MSBuild.Task) and [ILRepack](https://github.com/gluck/il-repack) built for netcore/MSBuild 16 shipped with the repo.
