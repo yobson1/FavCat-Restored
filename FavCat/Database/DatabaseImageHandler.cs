@@ -72,7 +72,14 @@ namespace FavCat.Database
 
                 await TaskUtilities.YieldToMainThread();
                 
-                MelonDebug.Msg($"Removed {cutoffPoint} images from cache");
+                MelonLogger.Msg($"Removed {cutoffPoint} images from cache");
+            }).ContinueWith(task =>
+            {
+                if (!task.IsFaulted) return;
+                
+                MelonLogger.Warning("Image cache trim failed; assuming cache corrupted, clearing collections. Exception: " + task.Exception);
+                myFileDatabase.GetCollection<LiteFileInfo<string>>("_files").DeleteAll();
+                myFileDatabase.GetCollection("_chunks").DeleteAll();
             });
         }
 
