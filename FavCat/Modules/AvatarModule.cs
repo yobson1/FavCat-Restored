@@ -122,7 +122,7 @@ namespace FavCat.Modules
 
             if (FavCatSettings.AvatarSearchMode.Value == "author")
             {
-                FavCatMod.Instance.playerModule?.OnPickerSelected(((IStoredModelAdapter<StoredAvatar>)model).Model.AuthorId, listsParent.gameObject); //TO-FIX
+                FavCatMod.Instance.PlayerModule?.OnPickerSelected(((IStoredModelAdapter<StoredAvatar>)model).Model.AuthorId, listsParent.gameObject); //TO-FIX
                 return;
             }
 
