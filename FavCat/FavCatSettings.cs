@@ -23,6 +23,8 @@ namespace FavCat
         internal static MelonPreferences_Entry<bool> MakeClickSounds;
         internal static MelonPreferences_Entry<string> AvatarSearchMode;
         internal static MelonPreferences_Entry<bool> SortPlayersByOnline;
+        
+        internal static MelonPreferences_Entry<bool> SortPlayersByJoinable;
 
         internal static void RegisterSettings()
         {
@@ -44,10 +46,11 @@ namespace FavCat
             MakeClickSounds = category.CreateEntry("MakeClickSounds", true, "Click sounds");
             AvatarSearchMode = category.CreateEntry(avatarSearchModeName, "select", "Avatar search result action");
             SortPlayersByOnline = category.CreateEntry(nameof(SortPlayersByOnline), true, "Show offline players at the end of the list");
-
-
-            ExpansionKitApi.RegisterSettingAsStringEnum(SettingsCategory, "ImageCachingMode", new[] { ("full", "Full local image cache (fastest, safest)"), ("fast", "Fast, use more RAM"), ("builtin", "Preserve RAM, more API requests") });
-            ExpansionKitApi.RegisterSettingAsStringEnum(SettingsCategory, avatarSearchModeName, new[] { ("select", "Select avatar"), ("author", "Show avatar author (safer)") });
+            
+            SortPlayersByJoinable = category.CreateEntry(nameof(SortPlayersByJoinable), true, "Show players in private instances at the end of the list");
+            
+            ExpansionKitApi.RegisterSettingAsStringEnum(SettingsCategory, "ImageCachingMode", new []{("full", "Full local image cache (fastest, safest)"), ("fast", "Fast, use more RAM"), ("builtin", "Preserve RAM, more API requests")});
+            ExpansionKitApi.RegisterSettingAsStringEnum(SettingsCategory, avatarSearchModeName, new []{("select", "Select avatar"), ("author", "Show avatar author (safer)")});
         }
 
         public static bool UseLocalImageCache => ImageCacheMode.Value == "full";
