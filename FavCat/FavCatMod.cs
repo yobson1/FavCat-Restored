@@ -113,7 +113,7 @@ namespace FavCat
             try
             {
                 if (FavCatSettings.EnablePlayerFavs.Value)
-                    playerModule = new PlayersModule();
+                    PlayerModule = new PlayersModule();
             }
             catch (Exception ex)
             {

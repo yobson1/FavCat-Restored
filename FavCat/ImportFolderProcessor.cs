@@ -131,7 +131,7 @@ namespace FavCat
             {
                 ImportStatusInner = $"Fetching world {i + 1}/{toAddAvatar.Count}";
                 var AvatarId = toAddAvatar[i];
-                if (database.myStoredAvatars.FindById(worldId) == null)
+                if (database.myStoredAvatars.FindById(AvatarId) == null)
                 {
                     await TaskUtilities.YieldToMainThread();
                     new ApiWorld {id = AvatarId}.Fetch(); // it will get intercepted and stored
