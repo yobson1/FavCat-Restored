@@ -2,7 +2,10 @@
 
 This repo's fork will contain changes to revert the decision of having VRC+ to use any of the favoriting within FavCat, forked from the [original VRCMods repo](https://github.com/knah/VRCMods).
 
+**If you're looking for the download, [click here](https://github.com/FelkonEx/FavCat-Restored/releases) to get the most recent version**. Or click on the "Releases" over there 👉
+
 **I highly recommend supporting Knah and the original VRCMods developers**, as they're the ones that set the foundation for FavCat.
+
 If there are any issues, **submit an issue ticket and i'll have a look** 👀 or alternatively, [join my discord](https://discord.com/invite/YWKpph8b3J) 😎
 
 I haven't changed any of the functionality outside of breaking-off the FavCat's VRChat+ things from the base repo's commit, and i won't be unless:
