@@ -6,8 +6,6 @@ This repo's fork will contain changes to revert the decision of having VRC+ to u
 
 **I highly recommend supporting Knah and the original VRCMods developers**, as they're the ones that set the foundation for FavCat.
 
-If there are any issues, **submit an issue ticket and i'll have a look** 👀 or alternatively, [join my discord](https://discord.com/invite/YWKpph8b3J) 😎
-
 I haven't changed any of the functionality outside of breaking-off the FavCat's VRChat+ things from the base repo's commit, and i won't be unless:
 * VRChat breaks the current version, and i need to fix it.
 * There's some clean code changes in the original repo that clean up the existing FavCat.
