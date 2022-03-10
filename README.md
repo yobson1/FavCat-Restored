@@ -1,3 +1,14 @@
+# ***FavCat-Restored is Finished***
+I'm done updating FavCat. I just don't care enough to update it anymore (due to priorities shifting to Streaming). I'm fine with someone forking this repo to do it, but don't expect me to keep updating it.
+
+If anyone wanted to join my streaming-specific discord, [You can do so here](https://discord.gg/NN97vNjXNA)! (just know there's no FavCat related stuff in there anymore).
+
+But either way, I appreciate everyone who's downloaded and used the mod over the months i've been updating it, but sadly you'll need to find somewhere else to get your FavCat needs.
+
+😎
+
+
+# Original README
 ![gamer](https://github.com/FelkonEx/FavCat-Restored/blob/master/Untitled-2.jpg)
 
 This repo's fork will contain changes to revert the decision of having VRC+ to use any of the favoriting within FavCat, forked from the [original VRCMods repo](https://github.com/knah/VRCMods).
