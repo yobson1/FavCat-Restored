@@ -40,10 +40,10 @@ namespace FavCat.Database
                 foreach (var liteFileInfo in myFileDatabase.FileStorage.FindAll())
                 {
                     if (string.IsNullOrEmpty(liteFileInfo.Id)) continue;
-                    
+
                     allFileInfos.Add((liteFileInfo,
                         myImageInfos.FindById(liteFileInfo.Id) ?? new StoredImageInfo
-                            {LastAccessed = DateTime.MinValue, Id = liteFileInfo.Id}));
+                        { LastAccessed = DateTime.MinValue, Id = liteFileInfo.Id }));
                 }
 
                 allFileInfos.Sort((a, b) => a.Item2.LastAccessed.CompareTo(b.Item2.LastAccessed));
@@ -71,12 +71,12 @@ namespace FavCat.Database
                 }
 
                 await TaskUtilities.YieldToMainThread();
-                
+
                 MelonLogger.Msg($"Removed {cutoffPoint} images from cache");
             }).ContinueWith(task =>
             {
                 if (!task.IsFaulted) return;
-                
+
                 MelonLogger.Warning("Image cache trim failed; assuming cache corrupted, clearing collections. Exception: " + task.Exception);
                 myFileDatabase.GetCollection<LiteFileInfo<string>>("_files").DeleteAll();
                 myFileDatabase.GetCollection("_chunks").DeleteAll();
@@ -98,7 +98,7 @@ namespace FavCat.Database
                 using var imageStream = myFileDatabase.FileStorage.OpenRead(url);
                 using var image = await Image.LoadAsync<Rgba32>(imageStream).ConfigureAwait(false);
 
-                var newImageInfo = new StoredImageInfo {Id = url, LastAccessed = DateTime.UtcNow};
+                var newImageInfo = new StoredImageInfo { Id = url, LastAccessed = DateTime.UtcNow };
                 myImageInfos.Upsert(newImageInfo);
 
                 await TaskUtilities.YieldToMainThread();
@@ -129,7 +129,7 @@ namespace FavCat.Database
 
             var texture = new Texture2D(image.Width, image.Height, TextureFormat.RGBA32, false, false);
             fixed (void* pixelsPtr = pixels)
-                texture.LoadRawTextureData((IntPtr) pixelsPtr, pixels.Length * 4);
+                texture.LoadRawTextureData((IntPtr)pixelsPtr, pixels.Length * 4);
 
             texture.Apply(false, true);
 
@@ -139,7 +139,10 @@ namespace FavCat.Database
         public Task StoreImageAsync(string url, Il2CppStructArray<byte> data)
         {
             if (string.IsNullOrEmpty(url)) return Task.CompletedTask;
-            
+
+            // copy the byte[] on calling thread to avoid issues
+            var stream = new MemoryStream(data);
+
             return Task.Run(() =>
             {
                 try
@@ -147,9 +150,9 @@ namespace FavCat.Database
                     if (myFileDatabase.FileStorage.Exists(url))
                         return;
 
-                    myFileDatabase.FileStorage.Upload(url, url, new MemoryStream(data));
+                    myFileDatabase.FileStorage.Upload(url, url, stream);
 
-                    var newImageInfo = new StoredImageInfo {Id = url, LastAccessed = DateTime.MinValue};
+                    var newImageInfo = new StoredImageInfo { Id = url, LastAccessed = DateTime.MinValue };
                     myImageInfos.Upsert(newImageInfo);
                 }
                 catch (LiteException ex)

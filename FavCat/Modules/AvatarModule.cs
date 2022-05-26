@@ -25,7 +25,7 @@ namespace FavCat.Modules
 
         private readonly bool myInitialised;
 
-        public AvatarModule() : base(ExpandedMenu.AvatarMenu, FavCatMod.Database.AvatarFavorites, GetListsParent())
+        public AvatarModule() : base(ExpandedMenu.AvatarMenu, FavCatMod.Database.AvatarFavorites, GetListsParent(), true, true)
         {
             MelonDebug.Msg("Adding button to UI - Looking up for Change Button");
             var foundAvatarPage = Resources.FindObjectsOfTypeAll<PageAvatar>()?.FirstOrDefault(p => p.transform.Find("Change Button") != null);
@@ -66,11 +66,11 @@ namespace FavCat.Modules
             return randomList.transform.parent;
         }
         
-        protected override void OnFavButtonClicked(StoredCategory storedCategory)
-        {
-            ApiAvatar currentApiAvatar = myPageAvatar.field_Public_SimpleAvatarPedestal_0.field_Internal_ApiAvatar_0;
-            OnFavButtonClicked(storedCategory, currentApiAvatar.id, false);
-        }
+        //protected override void OnFavButtonClicked(StoredCategory storedCategory)
+        //{
+        //    ApiAvatar currentApiAvatar = myPageAvatar.field_Public_SimpleAvatarPedestal_0.field_Internal_ApiAvatar_0;
+        //    OnFavButtonClicked(storedCategory, currentApiAvatar.id, false);
+        //}
 
         private void OnFavButtonClicked(StoredCategory storedCategory, string avatarId, bool disallowRecursiveRequests)
         {
@@ -100,19 +100,19 @@ namespace FavCat.Modules
             OnFavButtonClicked(category, id, true);
         }
 
-        protected internal override void RefreshFavButtons()
+        private void RefreshFavButtons()
         {
             var apiAvatar = myPageAvatar != null ? myPageAvatar.field_Public_SimpleAvatarPedestal_0 != null ? myPageAvatar.field_Public_SimpleAvatarPedestal_0.field_Internal_ApiAvatar_0 : null : null;
 
             foreach (var customPickerList in PickerLists)
             {
                 bool favorited = FavCatMod.Database.AvatarFavorites.IsFavorite(myCurrentUiAvatarId, customPickerList.Key);
-                    
+
                 var isNonPublic = apiAvatar?.releaseStatus != "public";
                 if (favorited)
                     customPickerList.Value.SetFavButtonText(isNonPublic ? "Unfav (p)" : "Unfav", true);
                 else
-                    customPickerList.Value.SetFavButtonText(isNonPublic ? "Fav (p)": "Fav", true);
+                    customPickerList.Value.SetFavButtonText(isNonPublic ? "Fav (p)" : "Fav", true);
             }
         }
 
@@ -192,7 +192,6 @@ namespace FavCat.Modules
                 });
         }
 
-        protected override bool FavButtonsOnLists => true; //REMOVE?
         protected override IPickerElement WrapModel(StoredFavorite? favorite, StoredAvatar model) => new DbAvatarAdapter(model, favorite);
 
         protected override void SortModelList(string sortCriteria, string category, List<(StoredFavorite?, StoredAvatar)> avatars)

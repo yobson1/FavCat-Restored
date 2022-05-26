@@ -6,6 +6,7 @@ using FavCat.CustomLists;
 using FavCat.Database.Stored;
 using MelonLoader;
 using UIExpansionKit.API;
+using UIExpansionKit.API.Controls;
 using UIExpansionKit.Components;
 using UnityEngine;
 using UnityEngine.UI;
@@ -17,8 +18,8 @@ namespace FavCat.Modules
     public class WorldsModule : ExtendedFavoritesModuleBase<StoredWorld>
     {
         private readonly PageWorldInfo myPageWorldInfo;
-        
-        public WorldsModule() : base(ExpandedMenu.WorldMenu, FavCatMod.Database.WorldFavorites, GetListsParent())
+
+        public WorldsModule() : base(ExpandedMenu.WorldMenu, FavCatMod.Database.WorldFavorites, GetListsParent(), true, true)
         {
             ExpansionKitApi.GetExpandedMenu(ExpandedMenu.WorldDetailsMenu).AddSimpleButton("Local Favorite", ShowFavMenu);
 
@@ -37,7 +38,7 @@ namespace FavCat.Modules
                 yield return null;
                 myPageWorldInfo.transform.Find("WorldButtons/NewButton").GetComponent<Button>().interactable = true;
             }
-        } 
+        }
 
         private void ShowFavMenu()
         {
@@ -48,7 +49,7 @@ namespace FavCat.Modules
 
             if (storedCategories.Count == 0)
                 availableListsMenu.AddLabel("Create some categories first before favoriting worlds!");
-            
+
             availableListsMenu.AddSimpleButton("Close", () => availableListsMenu.Hide());
 
             foreach (var storedCategory in storedCategories)
@@ -56,23 +57,21 @@ namespace FavCat.Modules
                 if (storedCategory.CategoryName == SearchCategoryName)
                     continue;
 
-                Text? buttonText = null;
                 availableListsMenu.AddSimpleButton(
-                    $"{(!Favorites.IsFavorite(currentWorld.id, storedCategory.CategoryName) ? "Favorite to" : "Unfavorite from")} {storedCategory.CategoryName}", 
-                    () =>
+                    $"{(!Favorites.IsFavorite(currentWorld.id, storedCategory.CategoryName) ? "Favorite to" : "Unfavorite from")} {storedCategory.CategoryName}",
+                    self =>
                     {
                         if (Favorites.IsFavorite(currentWorld.id, storedCategory.CategoryName))
                             Favorites.DeleteFavorite(currentWorld.id, storedCategory.CategoryName);
                         else
                             Favorites.AddFavorite(currentWorld.id, storedCategory.CategoryName);
 
-                        buttonText!.text = $"{(!Favorites.IsFavorite(currentWorld.id, storedCategory.CategoryName) ? "Favorite to" : "Unfavorite from")} {storedCategory.CategoryName}";
-                        
+                        self.SetText($"{(!Favorites.IsFavorite(currentWorld.id, storedCategory.CategoryName) ? "Favorite to" : "Unfavorite from")} {storedCategory.CategoryName}");
+
                         if (FavCatSettings.HidePopupAfterFav.Value) availableListsMenu.Hide();
-                    }, 
-                    o => buttonText = o.GetComponentInChildren<Text>());
+                    });
             }
-            
+
             availableListsMenu.Show();
         }
 
@@ -89,13 +88,13 @@ namespace FavCat.Modules
         private string myLastRequestedWorld = "";
         protected override void OnPickerSelected(IPickerElement picker)
         {
-            if (picker.Id == myLastRequestedWorld) 
+            if (picker.Id == myLastRequestedWorld)
                 return;
-            
+
             PlaySound();
 
             myLastRequestedWorld = picker.Id;
-            var world = new ApiWorld {id = picker.Id};
+            var world = new ApiWorld { id = picker.Id };
             world.Fetch(new Action<ApiContainer>(_ =>
             {
                 myLastRequestedWorld = "";
@@ -123,12 +122,6 @@ namespace FavCat.Modules
             }));
         }
 
-        protected override void OnFavButtonClicked(StoredCategory storedCategory)
-        {
-            throw new NotSupportedException(); // they aren't clicked for worlds
-        }
-
-        protected override bool FavButtonsOnLists => false;
         protected override void SortModelList(string sortCriteria, string category, List<(StoredFavorite?, StoredWorld)> avatars)
         {
             var inverted = sortCriteria.Length > 0 && sortCriteria[0] == '!';
@@ -138,7 +131,7 @@ namespace FavCat.Modules
                 case "name":
                 case "!name":
                 default:
-                    comparison = (a, b) => string.Compare(a.Model.Name, b.Model.Name, StringComparison.InvariantCultureIgnoreCase) * (inverted ? -1 : 1); 
+                    comparison = (a, b) => string.Compare(a.Model.Name, b.Model.Name, StringComparison.InvariantCultureIgnoreCase) * (inverted ? -1 : 1);
                     break;
                 case "updated":
                 case "!updated":
@@ -157,11 +150,6 @@ namespace FavCat.Modules
         }
 
         protected override IPickerElement WrapModel(StoredFavorite? favorite, StoredWorld model) => new DbWorldAdapter(model, favorite);
-
-        protected internal override void RefreshFavButtons()
-        { 
-            // no fav buttons, do nothing
-        }
 
         protected override void SearchButtonClicked()
         {
