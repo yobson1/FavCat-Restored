@@ -65,12 +65,14 @@ namespace FavCat.Modules
             var randomList = foundAvatarPage.GetComponentInChildren<UiAvatarList>();
             return randomList.transform.parent;
         }
-        
-        //protected override void OnFavButtonClicked(StoredCategory storedCategory)
-        //{
-        //    ApiAvatar currentApiAvatar = myPageAvatar.field_Public_SimpleAvatarPedestal_0.field_Internal_ApiAvatar_0;
-        //    OnFavButtonClicked(storedCategory, currentApiAvatar.id, false);
-        //}
+
+        protected override void OnFavButtonClicked(StoredCategory storedCategory)
+        {
+            ApiAvatar currentApiAvatar = myPageAvatar.field_Public_SimpleAvatarPedestal_0.field_Internal_ApiAvatar_0;
+            OnFavButtonClicked(storedCategory, currentApiAvatar.id, false);
+        }
+
+        protected override bool FavButtonsOnLists => true;
 
         private void OnFavButtonClicked(StoredCategory storedCategory, string avatarId, bool disallowRecursiveRequests)
         {
@@ -100,7 +102,7 @@ namespace FavCat.Modules
             OnFavButtonClicked(category, id, true);
         }
 
-        private void RefreshFavButtons()
+        protected internal override void RefreshFavButtons()
         {
             var apiAvatar = myPageAvatar != null ? myPageAvatar.field_Public_SimpleAvatarPedestal_0 != null ? myPageAvatar.field_Public_SimpleAvatarPedestal_0.field_Internal_ApiAvatar_0 : null : null;
 

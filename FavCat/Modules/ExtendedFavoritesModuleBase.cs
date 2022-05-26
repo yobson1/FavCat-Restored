@@ -49,8 +49,11 @@ namespace FavCat.Modules
 
 
         protected abstract void OnPickerSelected(IPickerElement picker);
+        protected abstract void OnFavButtonClicked(StoredCategory storedCategory);
+        protected abstract bool FavButtonsOnLists { get; }
         protected abstract void SortModelList(string sortCriteria, string category, List<(StoredFavorite?, T)> list);
         protected abstract IPickerElement WrapModel(StoredFavorite? favorite, T model);
+        protected internal abstract void RefreshFavButtons();
         protected abstract void SearchButtonClicked();
 
         protected bool CanPerformAdditiveActions { get; }
@@ -99,6 +102,7 @@ namespace FavCat.Modules
                 if (PickerLists.TryGetValue(categoryName, out var list))
                 {
                     UpdateListElements(categoryName, list);
+                    RefreshFavButtons();
                 }
             };
 
@@ -229,6 +233,7 @@ namespace FavCat.Modules
                         Favorites.UpdateCategory(newCategory);
                         CreateList(newCategory);
                         ReorderLists();
+                        RefreshFavButtons();
                     }
                     else
                     {
@@ -411,6 +416,7 @@ namespace FavCat.Modules
             await TaskUtilities.YieldToMainThread();
             CreateList(newCategory);
             ReorderLists();
+            RefreshFavButtons();
         }
 
         internal void CreateList(StoredCategory storedCategory)
@@ -421,7 +427,8 @@ namespace FavCat.Modules
             list.SetVisibleRows(storedCategory.VisibleRows);
             list.OnModelClick += OnPickerSelected;
             list.Category = storedCategory;
-            list.SetFavButtonVisible(false);
+            list.OnFavClick += () => OnFavButtonClicked(storedCategory);
+            list.SetFavButtonVisible(FavButtonsOnLists);
             list.OnSettingsClick += () =>
             {
                 myCurrentlySelectedList = list;

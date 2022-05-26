@@ -117,6 +117,17 @@ namespace FavCat.Modules
             }));
         }
 
+        protected override void OnFavButtonClicked(StoredCategory storedCategory)
+        {
+            throw new NotSupportedException(); // not happening
+        }
+        protected internal override void RefreshFavButtons()
+        {
+            // do nothing
+        }
+
+        protected override bool FavButtonsOnLists => false;
+
         protected override void SortModelList(string sortCriteria, string category, List<(StoredFavorite?, StoredPlayer)> avatars)
         {
             var inverted = sortCriteria.Length > 0 && sortCriteria[0] == '!';
