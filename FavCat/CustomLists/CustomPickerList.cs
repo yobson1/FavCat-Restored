@@ -13,391 +13,410 @@ using UnityEngine.UI;
 
 namespace FavCat.CustomLists
 {
-    public class CustomPickerList : MonoBehaviour
-    {
-        private int myDisplayedRows = 1;
-        private int myColumns = 5;
-        
-        private RectTransform myContentRoot;
-        private RectTransform myRectTransform;
-        private ScrollRect myContentScrollRect;
-        
-        private const int FullWidth = 1500; // 1526
-        private const int AvatarWidth = 1139; // 1144
-        private const int FullCellX = 305;
-        private const int AvatarCellX = 285; // 310 is original cell X
-        private const int CellY = 200;
+	public class CustomPickerList : MonoBehaviour
+	{
+		private int myDisplayedRows = 1;
+		private int myColumns = 5;
 
-        private Text myHeaderText;
-        private Text myCountText;
-        private Text myFavText;
-        private Button myFavButton;
+		private RectTransform myContentRoot;
+		private RectTransform myRectTransform;
+		private ScrollRect myContentScrollRect;
 
-        private int myCellSize = FullCellX;
+		private const int FullWidth = 1500; // 1526
+		private const int AvatarWidth = 1139; // 1144
+		private const int FullCellX = 305;
+		private const int AvatarCellX = 285; // 310 is original cell X
+		private const int CellY = 200;
 
-        private string myHeaderString;
-        private string myFavButtonText;
-        private bool myFavButtonEnabled;
-        private bool myFavButtonVisible;
+		private Text myHeaderText;
+		private Text myCountText;
+		private Text myFavText;
+		private Button myFavButton;
 
-        public string HeaderString
-        {
-            [HideFromIl2Cpp]
-            get => myHeaderString;
-            [HideFromIl2Cpp]
-            set
-            {
-                myHeaderString = value;
-                if (myHeaderText != null) myHeaderText.text = value;
-            }
-        }
+		private int myCellSize = FullCellX;
 
-        public StoredCategory Category;
+		private string myHeaderString;
+		private string myFavButtonText;
+		private bool myFavButtonEnabled;
+		private bool myFavButtonVisible;
 
-        private readonly List<IPickerElement> myModels = new List<IPickerElement>();
-        
-        private readonly Dictionary<(int X, int Y), GameObject> myPickersByCoordinate = new Dictionary<(int, int), GameObject>();
-        
-        public IReadOnlyList<IPickerElement> Models
-        {
-            [HideFromIl2Cpp]
-            get => myModels;
-        }
+		public string HeaderString
+		{
+			[HideFromIl2Cpp]
+			get => myHeaderString;
+			[HideFromIl2Cpp]
+			set
+			{
+				myHeaderString = value;
+				if (myHeaderText != null) myHeaderText.text = value;
+			}
+		}
 
-        private bool myIsAvatarListSizing;
+		public StoredCategory Category;
 
-        public Action? OnFavClick;
-        public Action? OnSettingsClick;
-        public Action<IPickerElement>? OnModelClick;
-        public Action<int>? VisibleRowsChanged;
+		private readonly List<IPickerElement> myModels = new List<IPickerElement>();
 
-        [HideFromIl2Cpp]
-        public CustomPickerList(IntPtr ptr) : base(ptr)
-        {
-        }
+		private readonly Dictionary<(int X, int Y), GameObject> myPickersByCoordinate = new Dictionary<(int, int), GameObject>();
 
-        [HideFromIl2Cpp]
-        public void SetAvatarListSizing(bool isAvatarList)
-        {
-            myIsAvatarListSizing = isAvatarList;
-            if (myRectTransform == null) return;
-            var layoutElement = myRectTransform.GetComponent<LayoutElement>();
-            var listWidth = isAvatarList ? AvatarWidth : FullWidth;
-            layoutElement.minWidth = -1;
-            myRectTransform.sizeDelta = new Vector2(listWidth, myRectTransform.sizeDelta.y);
-            myCellSize = isAvatarList ? AvatarCellX : FullCellX;
-            myColumns = isAvatarList ? 4 : 5;
-            foreach (var child in myRectTransform)
-            {
-                var childXform = child.Cast<RectTransform>();
-                childXform.sizeDelta = new Vector2(listWidth, childXform.sizeDelta.y);
-            }
-        }
+		public IReadOnlyList<IPickerElement> Models
+		{
+			[HideFromIl2Cpp]
+			get => myModels;
+		}
 
-        [HideFromIl2Cpp]
-        public void SetFavButtonVisible(bool visible)
-        {
-            myFavButtonVisible = visible;
-            if (myFavButton != null)
-                myFavButton.gameObject.SetActive(visible);
-        }
+		private bool myIsAvatarListSizing;
 
-        [HideFromIl2Cpp]
-        public void SetFavButtonText(string text, bool enabled)
-        {
-            myFavButtonText = text;
-            myFavButtonEnabled = enabled;
+		public Action? OnFavClick;
+		public Action? OnSettingsClick;
+		public Action<IPickerElement>? OnModelClick;
+		public Action<int>? VisibleRowsChanged;
 
-            if (myFavText == null) return;
-            
-            myFavText.text = text;
-            myFavButton.enabled = enabled;
-        }
+		[HideFromIl2Cpp]
+		public CustomPickerList(IntPtr ptr) : base(ptr)
+		{
+		}
 
-        public void Awake()
-        {
-            try
-            {
-                var transform = this.transform;
-                myHeaderText = transform.Find("Header/ListLabel").GetComponent<Text>();
-                myCountText = transform.Find("Header/PageLabel").GetComponent<Text>();
-                myFavText = transform.Find("Header/FavButton/Text").GetComponent<Text>();
-                myFavButton = transform.Find("Header/FavButton").GetComponent<Button>();
+		[HideFromIl2Cpp]
+		public void SetAvatarListSizing(bool isAvatarList)
+		{
+			myIsAvatarListSizing = isAvatarList;
+			if (myRectTransform == null) return;
+			var layoutElement = myRectTransform.GetComponent<LayoutElement>();
+			var listWidth = isAvatarList ? AvatarWidth : FullWidth;
+			layoutElement.minWidth = -1;
+			myRectTransform.sizeDelta = new Vector2(listWidth, myRectTransform.sizeDelta.y);
+			myCellSize = isAvatarList ? AvatarCellX : FullCellX;
+			myColumns = isAvatarList ? 4 : 5;
+			foreach (var child in myRectTransform)
+			{
+				var childXform = child.Cast<RectTransform>();
+				childXform.sizeDelta = new Vector2(listWidth, childXform.sizeDelta.y);
+			}
+		}
 
-                myContentRoot = transform.Find("Scroll View/Viewport/ContentRoot").Cast<RectTransform>();
-                myRectTransform = transform.Cast<RectTransform>();
+		[HideFromIl2Cpp]
+		public void SetFavButtonVisible(bool visible)
+		{
+			myFavButtonVisible = visible;
+			if (myFavButton != null)
+				myFavButton.gameObject.SetActive(visible);
+		}
 
-                transform.Find("Header/LessButton").GetComponent<Button>().onClick.AddListener((Action) CollapseClick);
-                transform.Find("Header/MoreButton").GetComponent<Button>().onClick.AddListener((Action) ExpandClick);
-                transform.Find("Header/FavButton").GetComponent<Button>().onClick.AddListener((Action) FavClick);
-                transform.Find("Header/SettingsButton").GetComponent<Button>().onClick.AddListener((Action) SettingsClick);
+		[HideFromIl2Cpp]
+		public void SetFavButtonText(string text, bool enabled)
+		{
+			myFavButtonText = text;
+			myFavButtonEnabled = enabled;
 
-                transform.Find("Header/HomeButton").GetComponent<Button>().onClick.AddListener((Action) HomeClick);
-                transform.Find("Header/EndButton").GetComponent<Button>().onClick.AddListener((Action) EndClick);
+			if (myFavText == null) return;
 
-                myContentScrollRect = AddScrollRectEx(transform.Find("Scroll View"));
-                myContentScrollRect.onValueChanged.AddListener((Action<Vector2>) ScrollValueChanged);
+			myFavText.text = text;
+			myFavButton.enabled = enabled;
+		}
 
-                SetAvatarListSizing(myIsAvatarListSizing);
-                DoResize();
-                RecreatePickers();
-                HeaderString = HeaderString;
-                SetFavButtonText(myFavButtonText, myFavButtonEnabled);
-                SetFavButtonVisible(myFavButtonVisible);
-            }
-            catch (Exception ex)
-            {
-                MelonLogger.Error(ex.ToString());
-            }
-        }
+		public void Awake()
+		{
+			try
+			{
+				var transform = this.transform;
+				myHeaderText = transform.Find("Header/ListLabel").GetComponent<Text>();
+				myCountText = transform.Find("Header/PageLabel").GetComponent<Text>();
+				myFavText = transform.Find("Header/FavButton/Text").GetComponent<Text>();
+				myFavButton = transform.Find("Header/FavButton").GetComponent<Button>();
+				myFavButton.onClick.AddListener((Action)FavClick);
 
-        private static ScrollRectEx AddScrollRectEx(Transform scrollView)
-        {
-            var rect = scrollView.GetComponent<ScrollRectEx>();
-            if (rect == null)
-            {
-                rect = scrollView.gameObject.AddComponent<ScrollRectEx>();
+				myContentRoot = transform.Find("Scroll View/Viewport/ContentRoot").Cast<RectTransform>();
+				myRectTransform = transform.Cast<RectTransform>();
 
-                rect.content = scrollView.Find("Viewport/ContentRoot").Cast<RectTransform>();
-                rect.horizontal = true;
-                rect.vertical = false;
-                rect.movementType = ScrollRect.MovementType.Elastic;
-                rect.elasticity = 0.1f;
-                rect.inertia = true;
-                rect.decelerationRate = 0.135f;
-                rect.scrollSensitivity = 1;
-                rect.viewport = scrollView.Find("Viewport").Cast<RectTransform>();
-                rect.horizontalScrollbar = null;
-            }
+				// Get, theme & setup buttons
+				var lessBtn = transform.Find("Header/LessButton").GetComponent<Button>();
+				var moreBtn = transform.Find("Header/MoreButton").GetComponent<Button>();
+				var settingsBtn = transform.Find("Header/SettingsButton").GetComponent<Button>();
+				var homeBtn = transform.Find("Header/HomeButton").GetComponent<Button>();
+				var endBtn = transform.Find("Header/EndButton").GetComponent<Button>();
 
-            return rect;
-        }
+				// Theme elements
+				if (FavCatSettings.UseCustomStyles.Value)
+				{
+					transform.Find("Background").GetComponent<Image>().color = FavCatSettings.BaseColor.RGBMultiplied(0.9f).AlphaMultiplied(0.9f);
+					transform.Find("Header").GetComponent<Image>().color = FavCatSettings.BaseColor;
+					lessBtn.colors = FavCatSettings.ButtonColors;
+					moreBtn.colors = FavCatSettings.ButtonColors;
+					settingsBtn.colors = FavCatSettings.ButtonColors;
+					homeBtn.colors = FavCatSettings.ButtonColors;
+					endBtn.colors = FavCatSettings.ButtonColors;
+					myFavButton.colors = FavCatSettings.ButtonColors;
+				}
 
-        [HideFromIl2Cpp]
-        private void ScrollValueChanged(Vector2 obj)
-        {
-            RecreatePickers();
-        }
+				lessBtn.onClick.AddListener((Action)CollapseClick);
+				moreBtn.onClick.AddListener((Action)ExpandClick);
+				settingsBtn.onClick.AddListener((Action)SettingsClick);
+				homeBtn.onClick.AddListener((Action)HomeClick);
+				endBtn.onClick.AddListener((Action)EndClick);
 
-        [HideFromIl2Cpp]
-        public void SetList<T>(IEnumerable<T> models, bool resetScroll) where T : class, IPickerElement
-        {
-            myModels.Clear();
+				myContentScrollRect = AddScrollRectEx(transform.Find("Scroll View"));
+				myContentScrollRect.onValueChanged.AddListener((Action<Vector2>)ScrollValueChanged);
 
-            RemoveAllPickers();
+				SetAvatarListSizing(myIsAvatarListSizing);
+				DoResize();
+				RecreatePickers();
+				HeaderString = HeaderString;
+				SetFavButtonText(myFavButtonText, myFavButtonEnabled);
+				SetFavButtonVisible(myFavButtonVisible);
+			}
+			catch (Exception ex)
+			{
+				MelonLogger.Error(ex.ToString());
+			}
+		}
 
-            myModels.AddRange(models);
+		private static ScrollRectEx AddScrollRectEx(Transform scrollView)
+		{
+			var rect = scrollView.GetComponent<ScrollRectEx>();
+			if (rect == null)
+			{
+				rect = scrollView.gameObject.AddComponent<ScrollRectEx>();
 
-            DoResize();
+				rect.content = scrollView.Find("Viewport/ContentRoot").Cast<RectTransform>();
+				rect.horizontal = true;
+				rect.vertical = false;
+				rect.movementType = ScrollRect.MovementType.Elastic;
+				rect.elasticity = 0.1f;
+				rect.inertia = true;
+				rect.decelerationRate = 0.135f;
+				rect.scrollSensitivity = 1;
+				rect.viewport = scrollView.Find("Viewport").Cast<RectTransform>();
+				rect.horizontalScrollbar = null;
+			}
 
-            if (resetScroll && myContentScrollRect != null)
-                myContentScrollRect.horizontalNormalizedPosition = 0f;
+			return rect;
+		}
 
-            RecreatePickers();
-        }
+		[HideFromIl2Cpp]
+		private void ScrollValueChanged(Vector2 obj)
+		{
+			RecreatePickers();
+		}
 
-        [HideFromIl2Cpp]
-        private void RemoveAllPickers()
-        {
-            foreach (var keyValuePair in myPickersByCoordinate)
-            {
-                keyValuePair.Value.SetActive(false);
-                keyValuePair.Value.GetComponent<CustomPicker>().Clean();
-                PickerPool.Instance.Release(keyValuePair.Value);
-            }
-            
-            myPickersByCoordinate.Clear();
-        }
+		[HideFromIl2Cpp]
+		public void SetList<T>(IEnumerable<T> models, bool resetScroll) where T : class, IPickerElement
+		{
+			myModels.Clear();
+
+			RemoveAllPickers();
+
+			myModels.AddRange(models);
+
+			DoResize();
+
+			if (resetScroll && myContentScrollRect != null)
+				myContentScrollRect.horizontalNormalizedPosition = 0f;
+
+			RecreatePickers();
+		}
+
+		[HideFromIl2Cpp]
+		private void RemoveAllPickers()
+		{
+			foreach (var keyValuePair in myPickersByCoordinate)
+			{
+				keyValuePair.Value.SetActive(false);
+				keyValuePair.Value.GetComponent<CustomPicker>().Clean();
+				PickerPool.Instance.Release(keyValuePair.Value);
+			}
+
+			myPickersByCoordinate.Clear();
+		}
 
 
-        [HideFromIl2Cpp]
-        private void RecreatePickers()
-        {
-            if (myCountText == null || myContentScrollRect == null) return;
-            if (myDisplayedRows == 0)
-            {
-                myCountText.text = $"{myModels.Count}";
-                return;
-            }
+		[HideFromIl2Cpp]
+		private void RecreatePickers()
+		{
+			if (myCountText == null || myContentScrollRect == null) return;
+			if (myDisplayedRows == 0)
+			{
+				myCountText.text = $"{myModels.Count}";
+				return;
+			}
 
-            var clampedNormalizedPosition = Mathf.Clamp01(myContentScrollRect.horizontalNormalizedPosition);
-            var currentViewportStart = (int) (clampedNormalizedPosition * (myModels.Count - myDisplayedRows * myColumns + myDisplayedRows - 1) / myDisplayedRows - 1);
-            if (currentViewportStart < 0) currentViewportStart = 0;
+			var clampedNormalizedPosition = Mathf.Clamp01(myContentScrollRect.horizontalNormalizedPosition);
+			var currentViewportStart = (int)(clampedNormalizedPosition * (myModels.Count - myDisplayedRows * myColumns + myDisplayedRows - 1) / myDisplayedRows - 1);
+			if (currentViewportStart < 0) currentViewportStart = 0;
 
-            var currentViewportEnd = currentViewportStart + myColumns + 2;
+			var currentViewportEnd = currentViewportStart + myColumns + 2;
 
-            if (myModels.Count <= myDisplayedRows * myColumns)
-                myCountText.text = myModels.Count.ToString();
-            else
-                myCountText.text = $"{(int) (clampedNormalizedPosition * myModels.Count + 0.5f)} / {myModels.Count}";
+			if (myModels.Count <= myDisplayedRows * myColumns)
+				myCountText.text = myModels.Count.ToString();
+			else
+				myCountText.text = $"{(int)(clampedNormalizedPosition * myModels.Count + 0.5f)} / {myModels.Count}";
 
-            var pickersToRecycle = myPickersByCoordinate
-                .Where(it => it.Key.X < currentViewportStart || it.Key.X > currentViewportEnd).ToList();
-            
-            foreach (var keyValuePair in pickersToRecycle)
-            {
-                myPickersByCoordinate.Remove(keyValuePair.Key);
-                
-                keyValuePair.Value.SetActive(false);
-                keyValuePair.Value.GetComponent<CustomPicker>().Clean();
-                PickerPool.Instance.Release(keyValuePair.Value);
-            }
+			var pickersToRecycle = myPickersByCoordinate
+				.Where(it => it.Key.X < currentViewportStart || it.Key.X > currentViewportEnd).ToList();
 
-            for (var x = currentViewportStart; x <= currentViewportEnd; x++)
-            {
-                for (var y = 0; y < myDisplayedRows; y++)
-                {
-                    if(myPickersByCoordinate.ContainsKey((x, y)))
-                        continue;
-                    
-                    var modelIndex = x * myDisplayedRows + y;
-                    if (modelIndex >= myModels.Count)
-                        continue;
+			foreach (var keyValuePair in pickersToRecycle)
+			{
+				myPickersByCoordinate.Remove(keyValuePair.Key);
 
-                    var newPicker = PickerPool.Instance.Request();
-                    var rectTransform = newPicker.transform.Cast<RectTransform>();
-                    rectTransform.SetParent(myContentRoot, false);
-                    rectTransform.sizeDelta = new Vector2(myCellSize, CellY);
-                    rectTransform.anchoredPosition = new Vector2(x * myCellSize, (myDisplayedRows - y) * CellY);
-                    newPicker.SetActive(true);
+				keyValuePair.Value.SetActive(false);
+				keyValuePair.Value.GetComponent<CustomPicker>().Clean();
+				PickerPool.Instance.Release(keyValuePair.Value);
+			}
 
-                    var model = myModels[modelIndex];
-                    
-                    InitPicker(model, newPicker);
-                    myPickersByCoordinate[(x, y)] = newPicker;
-                }
-            }
-        }
+			for (var x = currentViewportStart; x <= currentViewportEnd; x++)
+			{
+				for (var y = 0; y < myDisplayedRows; y++)
+				{
+					if (myPickersByCoordinate.ContainsKey((x, y)))
+						continue;
 
-        [HideFromIl2Cpp]
-        private void InitPicker(IPickerElement model, GameObject pickerGo)
-        {
-            var picker = pickerGo.GetComponent<CustomPicker>();
-            picker.Initialize(model, _ => OnModelClick?.Invoke(model));
-        }
+					var modelIndex = x * myDisplayedRows + y;
+					if (modelIndex >= myModels.Count)
+						continue;
 
-        [HideFromIl2Cpp]
-        private void DoResize()
-        {
-            if (myContentRoot == null)
-                return;
-            
-            // y anchors are set to (0, 1) aka fill, so yDelta = 0 is normal
-            myContentRoot.sizeDelta = new Vector2((myModels.Count + (myDisplayedRows - 1)) / Math.Max(1, myDisplayedRows) * myCellSize, 0);
-            
-            myRectTransform.GetComponent<LayoutElement>().minHeight = 58 + CellY * myDisplayedRows;
-            
-            myContentRoot.gameObject.SetActive(myDisplayedRows > 0);
-            
-            RemoveAllPickers();
-        }
+					var newPicker = PickerPool.Instance.Request();
+					var rectTransform = newPicker.transform.Cast<RectTransform>();
+					rectTransform.SetParent(myContentRoot, false);
+					rectTransform.sizeDelta = new Vector2(myCellSize, CellY);
+					rectTransform.anchoredPosition = new Vector2(x * myCellSize, (myDisplayedRows - y) * CellY);
+					newPicker.SetActive(true);
 
-        [HideFromIl2Cpp]
-        private void CollapseClick()
-        {
-            if (myDisplayedRows > 0)
-                myDisplayedRows--;
-            else
-                return;
+					var model = myModels[modelIndex];
 
-            VisibleRowsChanged?.Invoke(myDisplayedRows);
-            
-            DoResize();
-            RecreatePickers();
-        }
+					InitPicker(model, newPicker);
+					myPickersByCoordinate[(x, y)] = newPicker;
+				}
+			}
+		}
 
-        [HideFromIl2Cpp]
-        private void ExpandClick()
-        {
-            if (myDisplayedRows < 4)
-                myDisplayedRows++;
-            else
-                return;
+		[HideFromIl2Cpp]
+		private void InitPicker(IPickerElement model, GameObject pickerGo)
+		{
+			var picker = pickerGo.GetComponent<CustomPicker>();
+			picker.Initialize(model, _ => OnModelClick?.Invoke(model));
+		}
 
-            VisibleRowsChanged?.Invoke(myDisplayedRows);
-            
-            DoResize();
-            RecreatePickers();
-        }
+		[HideFromIl2Cpp]
+		private void DoResize()
+		{
+			if (myContentRoot == null)
+				return;
 
-        [HideFromIl2Cpp]
-        private void FavClick() => OnFavClick?.Invoke();
-        [HideFromIl2Cpp]
-        private void SettingsClick() => OnSettingsClick?.Invoke();
-        
-        [HideFromIl2Cpp]
-        private void HomeClick()
-        {
-            myContentScrollRect.horizontalNormalizedPosition = 0f;
-            
-            RecreatePickers();
-        }
+			// y anchors are set to (0, 1) aka fill, so yDelta = 0 is normal
+			myContentRoot.sizeDelta = new Vector2((myModels.Count + (myDisplayedRows - 1)) / Math.Max(1, myDisplayedRows) * myCellSize, 0);
 
-        [HideFromIl2Cpp]
-        private void EndClick()
-        {
-            myContentScrollRect.horizontalNormalizedPosition = 1f;
-            
-            RecreatePickers();
-        }
+			myRectTransform.GetComponent<LayoutElement>().minHeight = 58 + CellY * myDisplayedRows;
 
-        [HideFromIl2Cpp]
-        public void SetVisibleRows(int i)
-        {
-            myDisplayedRows = i;
+			myContentRoot.gameObject.SetActive(myDisplayedRows > 0);
 
-            if (myRectTransform == null) return;
-            
-            DoResize();
-            RecreatePickers();
-        }
+			RemoveAllPickers();
+		}
 
-        private void OnDestroy()
-        {
-            if (myParentScrollRect != null && myParentScrollRectListener != null)
-            {
-                myParentScrollRect.onValueChanged.RemoveListener(myParentScrollRectListener);
-                myParentScrollRectListener = null;
-            }
-        }
+		[HideFromIl2Cpp]
+		private void CollapseClick()
+		{
+			if (myDisplayedRows > 0)
+				myDisplayedRows--;
+			else
+				return;
 
-        private ScrollRect? myParentScrollRect;
-        private UnityAction<Vector2>? myParentScrollRectListener;
-        private static readonly Il2CppStructArray<Vector3> ourParentViewportCorners = new(4);
-        private static readonly Il2CppStructArray<Vector3> ourCorners = new(4);
+			VisibleRowsChanged?.Invoke(myDisplayedRows);
 
-        [HideFromIl2Cpp]
-        private static bool RectsIntersect(Il2CppStructArray<Vector3> a, Il2CppStructArray<Vector3> b, Vector3 upAxis)
-        {
-            var aMin = a.Min(it => Vector3.Dot(it, upAxis));
-            var aMax = a.Max(it => Vector3.Dot(it, upAxis));
-            var bMin = b.Min(it => Vector3.Dot(it, upAxis));
-            var bMax = b.Max(it => Vector3.Dot(it, upAxis));
+			DoResize();
+			RecreatePickers();
+		}
 
-            bool InRange(float min, float max, float val) => val > min && val < max;
+		[HideFromIl2Cpp]
+		private void ExpandClick()
+		{
+			if (myDisplayedRows < 4)
+				myDisplayedRows++;
+			else
+				return;
 
-            return InRange(aMin, aMax, bMin) || InRange(aMin, aMax, bMax) || InRange(bMin, bMax, aMin) ||
-                   InRange(bMin, bMax, aMax);
-        }
+			VisibleRowsChanged?.Invoke(myDisplayedRows);
 
-        [HideFromIl2Cpp]
-        private void OnParentScrollChanged(Vector2 _)
-        {
-            if (myParentScrollRect == null) return;
+			DoResize();
+			RecreatePickers();
+		}
 
-            myParentScrollRect.viewport.GetWorldCorners(ourParentViewportCorners);
-            myRectTransform.GetWorldCorners(ourCorners);
-            
-            myContentRoot.gameObject.SetActive(RectsIntersect(ourParentViewportCorners, ourCorners, myRectTransform.up));
-        }
+		[HideFromIl2Cpp]
+		private void FavClick() => OnFavClick?.Invoke();
+		[HideFromIl2Cpp]
+		private void SettingsClick() => OnSettingsClick?.Invoke();
 
-        [HideFromIl2Cpp]
-        public void SetParentScrollRect(ScrollRect parentScrollRect)
-        {
-            myParentScrollRect = parentScrollRect;
-            myParentScrollRectListener = new Action<Vector2>(OnParentScrollChanged);
+		[HideFromIl2Cpp]
+		private void HomeClick()
+		{
+			myContentScrollRect.horizontalNormalizedPosition = 0f;
 
-            myParentScrollRect.onValueChanged.AddListener(myParentScrollRectListener);
-        }
-    }
+			RecreatePickers();
+		}
+
+		[HideFromIl2Cpp]
+		private void EndClick()
+		{
+			myContentScrollRect.horizontalNormalizedPosition = 1f;
+
+			RecreatePickers();
+		}
+
+		[HideFromIl2Cpp]
+		public void SetVisibleRows(int i)
+		{
+			myDisplayedRows = i;
+
+			if (myRectTransform == null) return;
+
+			DoResize();
+			RecreatePickers();
+		}
+
+		private void OnDestroy()
+		{
+			if (myParentScrollRect != null && myParentScrollRectListener != null)
+			{
+				myParentScrollRect.onValueChanged.RemoveListener(myParentScrollRectListener);
+				myParentScrollRectListener = null;
+			}
+		}
+
+		private ScrollRect? myParentScrollRect;
+		private UnityAction<Vector2>? myParentScrollRectListener;
+		private static readonly Il2CppStructArray<Vector3> ourParentViewportCorners = new(4);
+		private static readonly Il2CppStructArray<Vector3> ourCorners = new(4);
+
+		[HideFromIl2Cpp]
+		private static bool RectsIntersect(Il2CppStructArray<Vector3> a, Il2CppStructArray<Vector3> b, Vector3 upAxis)
+		{
+			var aMin = a.Min(it => Vector3.Dot(it, upAxis));
+			var aMax = a.Max(it => Vector3.Dot(it, upAxis));
+			var bMin = b.Min(it => Vector3.Dot(it, upAxis));
+			var bMax = b.Max(it => Vector3.Dot(it, upAxis));
+
+			bool InRange(float min, float max, float val) => val > min && val < max;
+
+			return InRange(aMin, aMax, bMin) || InRange(aMin, aMax, bMax) || InRange(bMin, bMax, aMin) ||
+				   InRange(bMin, bMax, aMax);
+		}
+
+		[HideFromIl2Cpp]
+		private void OnParentScrollChanged(Vector2 _)
+		{
+			if (myParentScrollRect == null) return;
+
+			myParentScrollRect.viewport.GetWorldCorners(ourParentViewportCorners);
+			myRectTransform.GetWorldCorners(ourCorners);
+
+			myContentRoot.gameObject.SetActive(RectsIntersect(ourParentViewportCorners, ourCorners, myRectTransform.up));
+		}
+
+		[HideFromIl2Cpp]
+		public void SetParentScrollRect(ScrollRect parentScrollRect)
+		{
+			myParentScrollRect = parentScrollRect;
+			myParentScrollRectListener = new Action<Vector2>(OnParentScrollChanged);
+
+			myParentScrollRect.onValueChanged.AddListener(myParentScrollRectListener);
+		}
+	}
 }

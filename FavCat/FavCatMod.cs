@@ -18,209 +18,209 @@ using VRC.UI;
 using ImageDownloaderClosure = ImageDownloader.__c__DisplayClass11_0;
 using Object = UnityEngine.Object;
 
-[assembly: MelonInfo(typeof(FavCatMod), "FavCatRestored", "1.1.15", "Felkon & yobson (Original By Knah)", "https://github.com/yobson/FavCat-Restored")]
+[assembly: MelonInfo(typeof(FavCatMod), "FavCatRestored", "1.1.16", "Felkon & yobson (Original By Knah)", "https://github.com/yobson/FavCat-Restored")]
 [assembly: MelonGame("VRChat", "VRChat")]
 
 namespace FavCat
 {
-    internal partial class FavCatMod : MelonMod
-    {
-        public static LocalStoreDatabase? Database;
-        internal static FavCatMod Instance;
+	internal partial class FavCatMod : MelonMod
+	{
+		public static LocalStoreDatabase? Database;
+		internal static FavCatMod Instance;
 
-        internal AvatarModule? AvatarModule;
-        internal WorldsModule? WorldsModule;
-        internal PlayersModule? PlayerModule;
+		internal AvatarModule? AvatarModule;
+		internal WorldsModule? WorldsModule;
+		internal PlayersModule? PlayerModule;
 
-        internal static PageUserInfo PageUserInfo;
+		internal static PageUserInfo PageUserInfo;
 
-        public override void OnApplicationStart()
-        {
-            Instance = this;
-            if (!CheckWasSuccessful || !MustStayTrue || MustStayFalse) return;
+		public override void OnApplicationStart()
+		{
+			Instance = this;
+			if (!CheckWasSuccessful || !MustStayTrue || MustStayFalse) return;
 
-            Directory.CreateDirectory("./UserData/FavCatImport");
+			Directory.CreateDirectory("./UserData/FavCatImport");
 
-            ClassInjector.RegisterTypeInIl2Cpp<CustomPickerList>();
-            ClassInjector.RegisterTypeInIl2Cpp<CustomPicker>();
+			ClassInjector.RegisterTypeInIl2Cpp<CustomPickerList>();
+			ClassInjector.RegisterTypeInIl2Cpp<CustomPicker>();
 
-            ApiSnifferPatch.DoPatch();
+			ApiSnifferPatch.DoPatch();
 
-            FavCatSettings.RegisterSettings();
+			FavCatSettings.RegisterSettings();
 
-            MelonLogger.Msg("Creating database");
-            Database = new LocalStoreDatabase(FavCatSettings.DatabasePath.Value, FavCatSettings.ImageCachePath.Value);
+			MelonLogger.Msg("Creating database");
+			Database = new LocalStoreDatabase(FavCatSettings.DatabasePath.Value, FavCatSettings.ImageCachePath.Value);
 
-            Database.ImageHandler.TrimCache(FavCatSettings.MaxCacheSizeBytes).NoAwait();
+			Database.ImageHandler.TrimCache(FavCatSettings.MaxCacheSizeBytes).NoAwait();
 
-            foreach (var methodInfo in typeof(AvatarPedestal).GetMethods(BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Public).Where(it => it.Name.StartsWith("Method_Private_Void_ApiContainer_") && it.GetParameters().Length == 1))
-            {
-                HarmonyInstance.Patch(methodInfo, new HarmonyMethod(typeof(FavCatMod), nameof(AvatarPedestalPatch)));
-            }
+			foreach (var methodInfo in typeof(AvatarPedestal).GetMethods(BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Public).Where(it => it.Name.StartsWith("Method_Private_Void_ApiContainer_") && it.GetParameters().Length == 1))
+			{
+				HarmonyInstance.Patch(methodInfo, new HarmonyMethod(typeof(FavCatMod), nameof(AvatarPedestalPatch)));
+			}
 
-            DoAfterUiManagerInit(OnUiManagerInit);
-        }
+			DoAfterUiManagerInit(OnUiManagerInit);
+		}
 
-        private static void AvatarPedestalPatch(ApiContainer __0)
-        {
-            if (__0.Code != 200) return;
-            var model = __0.Model?.TryCast<ApiAvatar>();
-            if (model == null) return;
+		private static void AvatarPedestalPatch(ApiContainer __0)
+		{
+			if (__0.Code != 200) return;
+			var model = __0.Model?.TryCast<ApiAvatar>();
+			if (model == null) return;
 
-            if (MelonDebug.IsEnabled())
-                MelonDebug.Msg($"Ingested avatar with ID={model.id}");
-            Database?.UpdateStoredAvatar(model);
-        }
+			if (MelonDebug.IsEnabled())
+				MelonDebug.Msg($"Ingested avatar with ID={model.id}");
+			Database?.UpdateStoredAvatar(model);
+		}
 
-        internal CustomPickerList CreateCustomList(Transform parent)
-        {
-            var go = Object.Instantiate(AssetsHandler.ListPrefab, parent);
-            go.SetActive(true);
-            return go.AddComponent<CustomPickerList>();
-        }
+		internal CustomPickerList CreateCustomList(Transform parent)
+		{
+			var go = Object.Instantiate(AssetsHandler.ListPrefab, parent);
+			go.SetActive(true);
+			return go.AddComponent<CustomPickerList>();
+		}
 
-        public override void OnApplicationQuit()
-        {
-            Database?.Dispose();
-            Database = null;
-        }
+		public override void OnApplicationQuit()
+		{
+			Database?.Dispose();
+			Database = null;
+		}
 
-        public void OnUiManagerInit()
-        {
-            AssetsHandler.Load();
+		public void OnUiManagerInit()
+		{
+			AssetsHandler.Load();
 
-            try
-            {
-                if (FavCatSettings.EnableAvatarFavs.Value)
-                    AvatarModule = new AvatarModule();
-            }
-            catch (Exception ex)
-            {
-                MelonLogger.Error($"Exception in avatar module init: {ex}");
-            }
+			try
+			{
+				if (FavCatSettings.EnableAvatarFavs.Value)
+					AvatarModule = new AvatarModule();
+			}
+			catch (Exception ex)
+			{
+				MelonLogger.Error($"Exception in avatar module init: {ex}");
+			}
 
-            try
-            {
-                if (FavCatSettings.EnableWorldFavs.Value)
-                    WorldsModule = new WorldsModule();
-            }
-            catch (Exception ex)
-            {
-                MelonLogger.Error($"Exception in world module init: {ex}");
-            }
+			try
+			{
+				if (FavCatSettings.EnableWorldFavs.Value)
+					WorldsModule = new WorldsModule();
+			}
+			catch (Exception ex)
+			{
+				MelonLogger.Error($"Exception in world module init: {ex}");
+			}
 
-            try
-            {
-                if (FavCatSettings.EnablePlayerFavs.Value)
-                    PlayerModule = new PlayersModule();
-            }
-            catch (Exception ex)
-            {
-                MelonLogger.Error($"Exception in player module init: {ex}");
-            }
+			try
+			{
+				if (FavCatSettings.EnablePlayerFavs.Value)
+					PlayerModule = new PlayersModule();
+			}
+			catch (Exception ex)
+			{
+				MelonLogger.Error($"Exception in player module init: {ex}");
+			}
 
-            PageUserInfo = GameObject.Find("UserInterface/MenuContent/Screens/UserInfo").GetComponent<PageUserInfo>();
-            MelonLogger.Msg("Initialized!");
-        }
+			PageUserInfo = GameObject.Find("UserInterface/MenuContent/Screens/UserInfo").GetComponent<PageUserInfo>();
+			MelonLogger.Msg("Initialized!");
+		}
 
-        public override void OnUpdate()
-        {
-            AvatarModule?.Update();
-            WorldsModule?.Update();
-            PlayerModule?.Update();
-            GlobalImageCache.OnUpdate();
-        }
-    }
+		public override void OnUpdate()
+		{
+			AvatarModule?.Update();
+			WorldsModule?.Update();
+			PlayerModule?.Update();
+			GlobalImageCache.OnUpdate();
+		}
+	}
 
-    public class ApiSnifferPatch
-    {
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate byte ApiPopulateDelegate(IntPtr @this, IntPtr dictionary, IntPtr someRef, IntPtr methodRef);
+	public class ApiSnifferPatch
+	{
+		[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+		private delegate byte ApiPopulateDelegate(IntPtr @this, IntPtr dictionary, IntPtr someRef, IntPtr methodRef);
 
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate void ImageDownloaderOnDoneDelegate(IntPtr thisPtr, IntPtr asyncOperationPtr, IntPtr methodInfo);
+		[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+		private delegate void ImageDownloaderOnDoneDelegate(IntPtr thisPtr, IntPtr asyncOperationPtr, IntPtr methodInfo);
 
-        private static ApiPopulateDelegate ourOriginalApiPopulate = (_, _, _, _) => 0;
-        private static ImageDownloaderOnDoneDelegate ourOriginalOnDone = (_, _, _) => { };
+		private static ApiPopulateDelegate ourOriginalApiPopulate = (_, _, _, _) => 0;
+		private static ImageDownloaderOnDoneDelegate ourOriginalOnDone = (_, _, _) => { };
 
-        private static readonly Type ImageDownloaderClosureType;
-        private static readonly MethodInfo WebRequestField;
-        private static readonly MethodInfo ImageUrlField;
-        private static readonly MethodInfo? NestedClosureField;
+		private static readonly Type ImageDownloaderClosureType;
+		private static readonly MethodInfo WebRequestField;
+		private static readonly MethodInfo ImageUrlField;
+		private static readonly MethodInfo? NestedClosureField;
 
-        static ApiSnifferPatch()
-        {
-            ImageDownloaderClosureType = typeof(ImageDownloader).GetNestedTypes().Single(it => it.GetMethod(nameof(ImageDownloaderClosure._DownloadImageInternal_b__0)) != null);
-            WebRequestField = ImageDownloaderClosureType.GetProperties().Single(it => it.PropertyType == typeof(UnityWebRequest)).GetMethod;
-            NestedClosureField = ImageDownloaderClosureType.GetProperties().SingleOrDefault(it => it.PropertyType.IsNested && it.PropertyType.DeclaringType == typeof(ImageDownloader))?.GetMethod;
-            Type? possibleNestedClosureType = NestedClosureField?.ReturnType;
-            ImageUrlField = (NestedClosureField != null ? possibleNestedClosureType : ImageDownloaderClosureType)!.GetProperty("imageUrl")!.GetMethod;
-        }
+		static ApiSnifferPatch()
+		{
+			ImageDownloaderClosureType = typeof(ImageDownloader).GetNestedTypes().Single(it => it.GetMethod(nameof(ImageDownloaderClosure._DownloadImageInternal_b__0)) != null);
+			WebRequestField = ImageDownloaderClosureType.GetProperties().Single(it => it.PropertyType == typeof(UnityWebRequest)).GetMethod;
+			NestedClosureField = ImageDownloaderClosureType.GetProperties().SingleOrDefault(it => it.PropertyType.IsNested && it.PropertyType.DeclaringType == typeof(ImageDownloader))?.GetMethod;
+			Type? possibleNestedClosureType = NestedClosureField?.ReturnType;
+			ImageUrlField = (NestedClosureField != null ? possibleNestedClosureType : ImageDownloaderClosureType)!.GetProperty("imageUrl")!.GetMethod;
+		}
 
 
-        public static void DoPatch()
-        {
-            NativePatchUtils.NativePatch(typeof(ApiModel).GetMethods().Single(it =>
-                    it.Name == nameof(ApiModel.SetApiFieldsFromJson) && it.GetParameters().Length == 2 && it.GetParameters()[0].ParameterType.GenericTypeArguments[1] == typeof(Il2CppSystem.Object)),
-                out ourOriginalApiPopulate, ApiSnifferStatic);
+		public static void DoPatch()
+		{
+			NativePatchUtils.NativePatch(typeof(ApiModel).GetMethods().Single(it =>
+					it.Name == nameof(ApiModel.SetApiFieldsFromJson) && it.GetParameters().Length == 2 && it.GetParameters()[0].ParameterType.GenericTypeArguments[1] == typeof(Il2CppSystem.Object)),
+				out ourOriginalApiPopulate, ApiSnifferStatic);
 
-            NativePatchUtils.NativePatch(ImageDownloaderClosureType.GetMethod(nameof(ImageDownloaderClosure
-                ._DownloadImageInternal_b__0))!, out ourOriginalOnDone, ImageSnifferPatch);
-        }
+			NativePatchUtils.NativePatch(ImageDownloaderClosureType.GetMethod(nameof(ImageDownloaderClosure
+				._DownloadImageInternal_b__0))!, out ourOriginalOnDone, ImageSnifferPatch);
+		}
 
-        private static readonly object[] EmptyObjectArray = new object[0];
+		private static readonly object[] EmptyObjectArray = new object[0];
 
-        public static void ImageSnifferPatch(IntPtr instancePtr, IntPtr asyncOperationPtr, IntPtr methodInfo)
-        {
-            ourOriginalOnDone(instancePtr, asyncOperationPtr, methodInfo);
+		public static void ImageSnifferPatch(IntPtr instancePtr, IntPtr asyncOperationPtr, IntPtr methodInfo)
+		{
+			ourOriginalOnDone(instancePtr, asyncOperationPtr, methodInfo);
 
-            try
-            {
-                if (!FavCatSettings.UseLocalImageCache || FavCatMod.Database == null)
-                    return;
+			try
+			{
+				if (!FavCatSettings.UseLocalImageCache || FavCatMod.Database == null)
+					return;
 
-                var closure = Activator.CreateInstance(ImageDownloaderClosureType, instancePtr);
-                var url = (string)ImageUrlField.Invoke(NestedClosureField?.Invoke(closure, EmptyObjectArray) ?? closure, EmptyObjectArray);
+				var closure = Activator.CreateInstance(ImageDownloaderClosureType, instancePtr);
+				var url = (string)ImageUrlField.Invoke(NestedClosureField?.Invoke(closure, EmptyObjectArray) ?? closure, EmptyObjectArray);
 
-                var webRequest = (UnityWebRequest)WebRequestField.Invoke(closure, EmptyObjectArray);
-                if (webRequest.isNetworkError || webRequest.isHttpError)
-                    return;
+				var webRequest = (UnityWebRequest)WebRequestField.Invoke(closure, EmptyObjectArray);
+				if (webRequest.isNetworkError || webRequest.isHttpError)
+					return;
 
-                if (webRequest.downloadedBytes > 1024 * 1024)
-                {
-                    if (MelonDebug.IsEnabled())
-                        MelonDebug.Msg($"Ignored downloaded image from {url} because it's bigger than 1 MB");
-                    return; // ignore images over 1 megabyte, 256-pixel previews should not be that big
-                }
+				if (webRequest.downloadedBytes > 1024 * 1024)
+				{
+					if (MelonDebug.IsEnabled())
+						MelonDebug.Msg($"Ignored downloaded image from {url} because it's bigger than 1 MB");
+					return; // ignore images over 1 megabyte, 256-pixel previews should not be that big
+				}
 
-                FavCatMod.Database.ImageHandler.StoreImageAsync(url, webRequest.downloadHandler.data).NoAwait();
-            }
-            catch (Exception ex)
-            {
-                MelonLogger.Error($"Exception in image downloader patch: {ex}");
-            }
-        }
+				FavCatMod.Database.ImageHandler.StoreImageAsync(url, webRequest.downloadHandler.data).NoAwait();
+			}
+			catch (Exception ex)
+			{
+				MelonLogger.Error($"Exception in image downloader patch: {ex}");
+			}
+		}
 
-        public static byte ApiSnifferStatic(IntPtr @this, IntPtr dictionary, IntPtr someRef, IntPtr methodInfo)
-        {
-            var result = ourOriginalApiPopulate(@this, dictionary, someRef, methodInfo);
+		public static byte ApiSnifferStatic(IntPtr @this, IntPtr dictionary, IntPtr someRef, IntPtr methodInfo)
+		{
+			var result = ourOriginalApiPopulate(@this, dictionary, someRef, methodInfo);
 
-            try
-            {
-                var apiModel = new ApiModel(@this);
-                if (!apiModel.Populated) return result;
+			try
+			{
+				var apiModel = new ApiModel(@this);
+				if (!apiModel.Populated) return result;
 
-                var maybeUser = apiModel.TryCast<APIUser>();
-                if (maybeUser != null) FavCatMod.Database?.UpdateStoredPlayer(maybeUser);
-                var maybeWorld = apiModel.TryCast<ApiWorld>();
-                if (maybeWorld != null) FavCatMod.Database?.UpdateStoredWorld(maybeWorld);
-            }
-            catch (Exception ex)
-            {
-                MelonLogger.Error($"Exception in API sniffer patch: {ex}");
-            }
+				var maybeUser = apiModel.TryCast<APIUser>();
+				if (maybeUser != null) FavCatMod.Database?.UpdateStoredPlayer(maybeUser);
+				var maybeWorld = apiModel.TryCast<ApiWorld>();
+				if (maybeWorld != null) FavCatMod.Database?.UpdateStoredWorld(maybeWorld);
+			}
+			catch (Exception ex)
+			{
+				MelonLogger.Error($"Exception in API sniffer patch: {ex}");
+			}
 
-            return result;
-        }
-    }
+			return result;
+		}
+	}
 }
