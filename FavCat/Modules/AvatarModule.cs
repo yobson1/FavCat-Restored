@@ -16,6 +16,7 @@ using VRC.Core;
 using VRC.UI;
 using VRC.DataModel;
 using VRC.UI.Elements.Menus;
+using UnityEngine.XR;
 
 namespace FavCat.Modules
 {
@@ -69,7 +70,8 @@ namespace FavCat.Modules
 					+ "\nRelease status: " + avatar.releaseStatus
 					+ "\nIsSelf: " + apiUser.IsSelf);
 
-				var availableListsMenu = ExpansionKitApi.CreateCustomFullMenuPopup(LayoutDescription.WideSlimList);
+				var availableListsMenu = ExpansionKitApi.CreateCustomQuickMenuPage(LayoutDescription.QuickMenu3Columns);
+				availableListsMenu.SetUseQuickMenuLikeComponents(true);
 
 				if ((apiUser.allowAvatarCopying && avatar.releaseStatus == "public") || apiUser.IsSelf)
 				{
@@ -165,7 +167,7 @@ namespace FavCat.Modules
 
 		private IEnumerator ReFavAfterDelay(StoredCategory category, string id)
 		{
-			yield return new WaitForSeconds(0.25f);
+			yield return new WaitForEndOfFrame();
 			OnFavButtonClicked(category, id, true);
 		}
 
