@@ -6,12 +6,12 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Nullable>enable</Nullable>
     <ClearOutputDirectory>False</ClearOutputDirectory>
-    <AssemblyVersion>1.1.16.0</AssemblyVersion>
+    <AssemblyVersion>1.1.17.0</AssemblyVersion>
     <UsesNativePatches>true</UsesNativePatches>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="LiteDB" Version="5.0.9" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="1.0.2" />
+    <PackageReference Include="LiteDB" Version="5.0.11" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="1.0.4" />
   </ItemGroup>
   <Import Project="$(MsBuildThisFileDirectory)/../ILRepack/ILRepack.Lib.MSBuild.Task.targets" />
   <ItemGroup>
@@ -40,6 +40,6 @@
     </ItemGroup>
     <Message Text="MERGING: @(InputAssemblies->'%(Filename)') into $(OutputAssembly)" Importance="High" />
     <ILRepack Internalize="true" LibraryPath="@(IlRepackLibs)" OutputFile="$(OutputPath)/$(AssemblyName)Restored.dll" InputAssemblies="@(InputAssemblies)" />
-	<Exec Command="copy &quot;$(MsBuildThisFileDirectory)..\Output\$(Configuration)\net472\$(TargetName)Restored$(TargetExt)&quot; &quot;C:\Program Files (x86)\Steam\steamapps\common\VRChat\Mods\$(TargetName)Restored$(TargetExt)&quot;" />
+	<Exec Command="copy &quot;$(OutputPath)/$(AssemblyName)Restored$(TargetExt)&quot; &quot;C:\Program Files (x86)\Steam\steamapps\common\VRChat\Mods\$(TargetName)Restored$(TargetExt)&quot;" />
   </Target>
 </Project>
