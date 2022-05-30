@@ -1,3 +1,7 @@
+[![GitHub license](https://img.shields.io/github/license/yobson1/FavCat-Restored?style=flat-square)](https://github.com/yobson1/FavCat-Restored/blob/master/LICENSE)
+[![GitHub all releases](https://img.shields.io/github/downloads/yobson1/FavCat-Restored/total?color=%23eab0e3&style=flat-square)](https://github.com/yobson1/FavCat-Restored/releases)
+[![GitHub stars](https://img.shields.io/github/stars/yobson1/FavCat-Restored?color=%23ffcd3c&style=flat-square)](https://github.com/yobson1/FavCat-Restored/stargazers)
+
 # FavCat-Restored
 Forked from mister [Felkon](https://github.com/FelkonEx), original by [knah](https://github.com/knah).
 
@@ -5,17 +9,13 @@ FavCat with avatar favorites restored. Very cool.
 
 😎
 
-# Original README
 This repo's fork will contain changes to revert the decision of having VRC+ to use any of the favoriting within FavCat, forked from the [original VRCMods repo](https://github.com/knah/VRCMods).
 
 **If you're looking for the download, [click here](https://github.com/yobson1/FavCat-Restored/releases) to get the most recent version**. Or click on the "Releases" over there 👉
 
 **I highly recommend supporting Knah and the original VRCMods developers**, as they're the ones that set the foundation for FavCat.
 
-I haven't changed any of the functionality outside of breaking-off the FavCat's VRChat+ things from the base repo's commit, and i won't be unless:
-* VRChat breaks the current version, and i need to fix it.
-* There's some clean code changes in the original repo that clean up the existing FavCat.
-* Merging in UIExpansionKit changes (for build purposes).
+I have added & plan on continuing to add some of my own tweaks & improvements including an avatar favorite button to the user select quick menu and recolouring support.
 
 If you don't trust the releases i put up for whatever reason, `I suggest cloning this repo and building it yourself`.
 It's always safer if you build it yourself or understand how the code works, since you know exactly what's going into the `.dll` files that are generated.
@@ -37,7 +37,7 @@ And yes, it will probably be ignored/forever hanging in "under review" like the 
 
 ## FavCat
 An all-in-one local favorites mod. Unlimited favorite lists with unlimited favorites in them and a searchable local database of content and players.  
-**Requires UI Expansion Kit 0.3.4 or newer**  
+**Requires latest UI Expansion Kit**  
 #### Features:
 * Unlimited lists (categories) for favorites, each of unlimited size
 * Lag-free even with large lists
@@ -50,10 +50,10 @@ An all-in-one local favorites mod. Unlimited favorite lists with unlimited favor
 * Categorize your own private avatars
 * Import avatar favorites from other local favorite mods (read below)
 * Exchange search database with friends (read below)
+* FavCat avatar favorite button in the user select quick menu to favorite another player's avatar without first cloning it. *(Only for players with avatar cloning enabled)*
 * Many more small things
 
 #### Known limitations
-* Player favorites don't show online status
 * Lists with over a thousand elements can take a bit of time on game startup/list creation
 
 #### Changing database location
