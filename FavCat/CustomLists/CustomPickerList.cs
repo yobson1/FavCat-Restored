@@ -136,24 +136,7 @@ namespace FavCat.CustomLists
 				var endBtn = transform.Find("Header/EndButton").GetComponent<Button>();
 
 				// Theme elements
-				if (FavCatSettings.UseCustomStyles.Value)
-				{
-					if (FavCatSettings.ColorBackground.Value)
-					{
-						transform.Find("Background").GetComponent<Image>().color = FavCatSettings.BaseColor.RGBMultiplied(0.9f).AlphaMultiplied(0.9f);
-					}
-					else
-					{
-						transform.Find("Background").GetComponent<Image>().color = new Color(0.1f, 0.1f, 0.1f, 0.8f);
-					}
-					transform.Find("Header").GetComponent<Image>().color = FavCatSettings.BaseColor;
-					lessBtn.colors = FavCatSettings.ButtonColors;
-					moreBtn.colors = FavCatSettings.ButtonColors;
-					settingsBtn.colors = FavCatSettings.ButtonColors;
-					homeBtn.colors = FavCatSettings.ButtonColors;
-					endBtn.colors = FavCatSettings.ButtonColors;
-					myFavButton.colors = FavCatSettings.ButtonColors;
-				}
+				SetupTheme();
 
 				lessBtn.onClick.AddListener((Action)CollapseClick);
 				moreBtn.onClick.AddListener((Action)ExpandClick);
@@ -176,6 +159,33 @@ namespace FavCat.CustomLists
 				MelonLogger.Error(ex.ToString());
 			}
 		}
+
+		[HideFromIl2Cpp]
+		private void SetupTheme()
+		{
+			if (FavCatSettings.UseCustomStyles.Value)
+			{
+				if (FavCatSettings.ColorBackground.Value)
+				{
+					transform.Find("Background").GetComponent<Image>().color = FavCatSettings.BaseColor.RGBMultiplied(0.9f).AlphaMultiplied(0.9f);
+				}
+				else
+				{
+					transform.Find("Background").GetComponent<Image>().color = new Color(0.1f, 0.1f, 0.1f, 0.8f);
+				}
+
+				transform.Find("Header").GetComponent<Image>().color = FavCatSettings.BaseColor;
+
+				myFavButton.colors = FavCatSettings.ButtonColors;
+				transform.Find("Header/LessButton").GetComponent<Button>().colors = FavCatSettings.ButtonColors;
+				transform.Find("Header/MoreButton").GetComponent<Button>().colors = FavCatSettings.ButtonColors;
+				transform.Find("Header/SettingsButton").GetComponent<Button>().colors = FavCatSettings.ButtonColors;
+				transform.Find("Header/HomeButton").GetComponent<Button>().colors = FavCatSettings.ButtonColors;
+				transform.Find("Header/EndButton").GetComponent<Button>().colors = FavCatSettings.ButtonColors;
+			}
+		}
+
+		private void OnEnable() => SetupTheme();
 
 		private static ScrollRectEx AddScrollRectEx(Transform scrollView)
 		{

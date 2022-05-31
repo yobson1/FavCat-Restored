@@ -97,7 +97,6 @@ namespace FavCat.CustomLists
 				myImage.texture = texture;
 		}
 
-
 		private void Awake()
 		{
 			myImage = GetComponentInChildren<RawImage>();
@@ -106,10 +105,7 @@ namespace FavCat.CustomLists
 			myPrivateImage = transform.Find("CornerLock").gameObject;
 			myLowerCornerImage = transform.Find("LowerCornerIcon").GetComponent<Image>();
 
-			if (FavCatSettings.UseCustomStyles.Value)
-			{
-				transform.Find("Panel").GetComponent<Image>().color = Color.black.AlphaMultiplied(0.8f);
-			}
+			SetupTheme();
 
 			GetComponent<Button>().onClick.AddListener(new Action(() => myOnClick?.Invoke(myListElement?.Id)));
 
@@ -117,8 +113,18 @@ namespace FavCat.CustomLists
 				Initialize(myListElement, myOnClick!);
 		}
 
+		[HideFromIl2Cpp]
+		private void SetupTheme()
+		{
+			if (FavCatSettings.UseCustomStyles.Value)
+			{
+				transform.Find("Panel").GetComponent<Image>().color = Color.black.AlphaMultiplied(0.8f);
+			}
+		}
+
 		private void OnEnable()
 		{
+			SetupTheme();
 			if (myTexture != null)
 				myImage.texture = myTexture;
 			else

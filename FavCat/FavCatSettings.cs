@@ -62,7 +62,7 @@ namespace FavCat
 			// We need to wait so that Styletor can load before us
 			yield return new WaitForEndOfFrame();
 			MelonLogger.Msg("Styletor is loaded, adding Styletor settings");
-			UseStyletorColors = Category.CreateEntry(nameof(UseStyletorColors), false, "Inherit color choices from Styletor (requires restart)");
+			UseStyletorColors = Category.CreateEntry(nameof(UseStyletorColors), false, "Inherit color choices from Styletor");
 			StyletorBase = MelonPreferences.GetEntry<string>("Styletor", "BaseColorString");
 			StyletorAccent = MelonPreferences.GetEntry<string>("Styletor", "AccentColorString");
 		}
@@ -89,8 +89,8 @@ namespace FavCat
 
 			SortPlayersByJoinable = Category.CreateEntry(nameof(SortPlayersByJoinable), true, "Show players in private instances at the end of the list");
 
-			UseCustomStyles = Category.CreateEntry(nameof(UseCustomStyles), true, "Use custom styles (requires restart)");
-			ColorBackground = Category.CreateEntry(nameof(ColorBackground), false, "Use custom colors on the background of favorite lists (requires restart)");
+			UseCustomStyles = Category.CreateEntry(nameof(UseCustomStyles), true, "Use custom styles (requires restart to disable)");
+			ColorBackground = Category.CreateEntry(nameof(ColorBackground), false, "Use custom colors on the background of favorite lists");
 			if (IsStyletorLoaded)
 			{
 				MelonCoroutines.Start(RegisterStyletorSettings());
