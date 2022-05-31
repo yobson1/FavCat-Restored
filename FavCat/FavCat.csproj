@@ -8,12 +8,13 @@
     <ClearOutputDirectory>False</ClearOutputDirectory>
     <AssemblyVersion>1.1.17.0</AssemblyVersion>
     <UsesNativePatches>true</UsesNativePatches>
+    <AssemblyName>$(MSBuildProjectName)Restored</AssemblyName>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="LiteDB" Version="5.0.11" />
     <PackageReference Include="SixLabors.ImageSharp" Version="1.0.4" />
   </ItemGroup>
-  <Import Project="$(MsBuildThisFileDirectory)/../ILRepack/ILRepack.Lib.MSBuild.Task.targets" />
+  <Import Project="$(MsBuildThisFileDirectory)../ILRepack/ILRepack.Lib.MSBuild.Task.targets" />
   <ItemGroup>
     <None Remove="extraui" />
     <EmbeddedResource Include="extraui" />
@@ -28,19 +29,19 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <InputAssemblies Include="$(OutputPath)/$(AssemblyName).dll" />
-      <InputAssemblies Include="$(OutputPath)/LiteDB.dll" />
-      <InputAssemblies Include="$(OutputPath)/SixLabors.ImageSharp.dll" />
-      <InputAssemblies Include="$(OutputPath)/System.Memory.dll" />
-      <InputAssemblies Include="$(OutputPath)/System.Buffers.dll" />
-      <InputAssemblies Include="$(OutputPath)/System.Runtime.CompilerServices.Unsafe.dll" />
+      <InputAssemblies Include="$(OutputPath)$(AssemblyName).dll" />
+      <InputAssemblies Include="$(OutputPath)LiteDB.dll" />
+      <InputAssemblies Include="$(OutputPath)SixLabors.ImageSharp.dll" />
+      <InputAssemblies Include="$(OutputPath)System.Memory.dll" />
+      <InputAssemblies Include="$(OutputPath)System.Buffers.dll" />
+      <InputAssemblies Include="$(OutputPath)System.Runtime.CompilerServices.Unsafe.dll" />
 
       <IlRepackLibs Include="$(OutputPath)" />
       <IlRepackLibs Include="$(VRChatPath)MelonLoader" />
       <IlRepackLibs Include="$(VRChatPath)MelonLoader\Managed" />
     </ItemGroup>
-    <Message Text="MERGING: @(InputAssemblies->'%(Filename)') into $(OutputAssembly)" Importance="High" />
-    <ILRepack Internalize="true" LibraryPath="@(IlRepackLibs)" OutputFile="$(OutputPath)/$(AssemblyName)Restored.dll" InputAssemblies="@(InputAssemblies)" />
-	<Exec Command="copy &quot;$(OutputPath)/$(AssemblyName)Restored$(TargetExt)&quot; &quot;$(VRChatPath)Mods\$(TargetName)Restored$(TargetExt)&quot;" />
+    <Message Text="MERGING: @(InputAssemblies->'%(Filename)') into $(AssemblyName)$(TargetExt)" Importance="High" />
+    <ILRepack Internalize="true" LibraryPath="@(IlRepackLibs)" OutputFile="$(OutputPath)$(AssemblyName)$(TargetExt)" InputAssemblies="@(InputAssemblies)" />
+    <Exec Command="copy &quot;$(OutputPath)/$(TargetName)$(TargetExt)&quot; &quot;$(VRChatPath)Mods\$(TargetName)$(TargetExt)&quot;" />
   </Target>
 </Project>
