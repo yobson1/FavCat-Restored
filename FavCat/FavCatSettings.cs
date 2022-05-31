@@ -33,6 +33,7 @@ namespace FavCat
 		internal static MelonPreferences_Entry<bool> SortPlayersByJoinable;
 
 		internal static MelonPreferences_Entry<bool> UseCustomStyles;
+		internal static MelonPreferences_Entry<bool> ColorBackground;
 		internal static MelonPreferences_Entry<bool> UseStyletorColors;
 		internal static MelonPreferences_Entry<string> StyletorBase;
 		internal static MelonPreferences_Entry<string> StyletorAccent;
@@ -89,6 +90,7 @@ namespace FavCat
 			SortPlayersByJoinable = Category.CreateEntry(nameof(SortPlayersByJoinable), true, "Show players in private instances at the end of the list");
 
 			UseCustomStyles = Category.CreateEntry(nameof(UseCustomStyles), true, "Use custom styles (requires restart)");
+			ColorBackground = Category.CreateEntry(nameof(ColorBackground), false, "Use custom colors on the background of favorite lists (requires restart)");
 			if (IsStyletorLoaded)
 			{
 				MelonCoroutines.Start(RegisterStyletorSettings());

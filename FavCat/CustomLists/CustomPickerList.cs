@@ -138,7 +138,14 @@ namespace FavCat.CustomLists
 				// Theme elements
 				if (FavCatSettings.UseCustomStyles.Value)
 				{
-					transform.Find("Background").GetComponent<Image>().color = FavCatSettings.BaseColor.RGBMultiplied(0.9f).AlphaMultiplied(0.9f);
+					if (FavCatSettings.ColorBackground.Value)
+					{
+						transform.Find("Background").GetComponent<Image>().color = FavCatSettings.BaseColor.RGBMultiplied(0.9f).AlphaMultiplied(0.9f);
+					}
+					else
+					{
+						transform.Find("Background").GetComponent<Image>().color = new Color(0.1f, 0.1f, 0.1f, 0.8f);
+					}
 					transform.Find("Header").GetComponent<Image>().color = FavCatSettings.BaseColor;
 					lessBtn.colors = FavCatSettings.ButtonColors;
 					moreBtn.colors = FavCatSettings.ButtonColors;
