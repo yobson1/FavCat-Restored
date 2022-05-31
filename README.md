@@ -7,6 +7,8 @@ Forked from mister [Felkon](https://github.com/FelkonEx), original by [knah](htt
 
 FavCat with avatar favorites restored. Very cool.
 
+Optional compatability with PlagueVRC's [GithubModUpdater](https://github.com/PlagueVRC/GithubModUpdater) if you'd like to use it [download GitHubModUpdater](https://github.com/PlagueVRC/GithubModUpdater/releases) and place it in your VRChat/Plugins folder.
+
 😎
 
 This repo's fork will contain changes to revert the decision of having VRC+ to use any of the favoriting within FavCat, forked from the [original VRCMods repo](https://github.com/knah/VRCMods).
