@@ -3,52 +3,52 @@ using UnityEngine;
 
 namespace FavCat.CustomLists
 {
-    public class PickerPool
-    {
-        private readonly GameObject myPickerPrefab;
-        private readonly Transform myPoolRoot;
-        public static PickerPool Instance { get; private set; }
+	public class PickerPool
+	{
+		private readonly GameObject myPickerPrefab;
+		private readonly Transform myPoolRoot;
+		public static PickerPool Instance { get; private set; }
 
-        private readonly Stack<GameObject> myObjects = new Stack<GameObject>();
+		private readonly Stack<GameObject> myObjects = new Stack<GameObject>();
 
-        private int myObjectsBorrowed;
+		private int myObjectsBorrowed;
 
-        public PickerPool(GameObject pickerPrefab, GameObject poolRoot)
-        {
-            myPickerPrefab = pickerPrefab;
-            myPoolRoot = poolRoot.transform;
-            
-            poolRoot.SetActive(false);
+		public PickerPool(GameObject pickerPrefab, GameObject poolRoot)
+		{
+			myPickerPrefab = pickerPrefab;
+			myPoolRoot = poolRoot.transform;
 
-            Instance = this;
-        }
+			poolRoot.SetActive(false);
 
-        public GameObject Request()
-        {
-            myObjectsBorrowed++;
+			Instance = this;
+		}
 
-            if (myObjects.Count == 0)
-            {
-                var result = Object.Instantiate(myPickerPrefab);
-                result.AddComponent<CustomPicker>();
-                return result;
-            }
+		public GameObject Request()
+		{
+			myObjectsBorrowed++;
 
-            return myObjects.Pop();
-        }
+			if (myObjects.Count == 0)
+			{
+				var result = Object.Instantiate(myPickerPrefab);
+				result.AddComponent<CustomPicker>();
+				return result;
+			}
 
-        public void Release(GameObject go)
-        {
-            myObjectsBorrowed--;
+			return myObjects.Pop();
+		}
 
-            /*if (myObjects.Count > myObjectsBorrowed + 100)
+		public void Release(GameObject go)
+		{
+			myObjectsBorrowed--;
+
+			/*if (myObjects.Count > myObjectsBorrowed + 100)
             {
                 Object.Destroy(go);
                 return;
             }*/ // todo: better shrinking?
-            
-            go.transform.SetParent(myPoolRoot, false);
-            myObjects.Push(go);
-        }
-    }
+
+			go.transform.SetParent(myPoolRoot, false);
+			myObjects.Push(go);
+		}
+	}
 }

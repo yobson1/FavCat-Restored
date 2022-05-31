@@ -6,27 +6,27 @@ using UnityEngine;
 
 namespace UIExpansionKit.Components
 {
-    public class EnableDisableListener : MonoBehaviour
-    {
+	public class EnableDisableListener : MonoBehaviour
+	{
 
-        [method:HideFromIl2Cpp]
-        public event Action? OnEnabled;
-        
-        [method:HideFromIl2Cpp]
-        public event Action? OnDisabled;
-        
-        public EnableDisableListener(IntPtr obj0) : base(obj0)
-        {
-        }
+		[method: HideFromIl2Cpp]
+		public event Action? OnEnabled;
 
-        private void OnEnable()
-        {
-            OnEnabled?.Invoke();
-        }
+		[method: HideFromIl2Cpp]
+		public event Action? OnDisabled;
 
-        private void OnDisable()
-        {
-            OnDisabled?.Invoke();
-        }
-    }
+		public EnableDisableListener(IntPtr obj0) : base(obj0)
+		{
+		}
+
+		private void OnEnable()
+		{
+			OnEnabled?.Invoke();
+		}
+
+		private void OnDisable()
+		{
+			OnDisabled?.Invoke();
+		}
+	}
 }

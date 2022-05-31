@@ -7,81 +7,81 @@ using VRC.Core;
 
 namespace FavCat
 {
-    public static class ScanningReflectionCache
-    {
-        private delegate void DisplayErrorAvatarDelegate(SimpleAvatarPedestal @this);
-        private delegate void PedestalRefreshDelegate(SimpleAvatarPedestal @this, ApiAvatar avatar);
-        
-        private static DisplayErrorAvatarDelegate? ourDisplayErrorAvatarDelegate;
-        private static PedestalRefreshDelegate? ourPedestalRefreshDelegate;
+	public static class ScanningReflectionCache
+	{
+		private delegate void DisplayErrorAvatarDelegate(SimpleAvatarPedestal @this);
+		private delegate void PedestalRefreshDelegate(SimpleAvatarPedestal @this, ApiAvatar avatar);
 
-        private static Action<ApiWorld, ApiWorldInstance?, bool, APIUser?>? ourShowWorldInfoPageDelegate;
+		private static DisplayErrorAvatarDelegate? ourDisplayErrorAvatarDelegate;
+		private static PedestalRefreshDelegate? ourPedestalRefreshDelegate;
 
-        public static void DisplayWorldInfoPage(ApiWorld world, ApiWorldInstance? instance, bool hasInstanceId, APIUser? user)
-        {
-            if (ourShowWorldInfoPageDelegate == null)
-            {
-                var target = typeof(UiWorldList)
-                    .GetMethods(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Static).Single(it =>
-                        it.Name.StartsWith("Method_Public_Static_Void_ApiWorld_ApiWorldInstance_Boolean_APIUser_") &&
-                        XrefScanner.XrefScan(it).Any(jt =>
-                            jt.Type == XrefType.Global && jt.ReadAsObject()?.ToString() ==
-                            "UserInterface/MenuContent/Screens/WorldInfo"));
+		private static Action<ApiWorld, ApiWorldInstance?, bool, APIUser?>? ourShowWorldInfoPageDelegate;
 
-                ourShowWorldInfoPageDelegate = (Action<ApiWorld, ApiWorldInstance?, bool, APIUser?>)Delegate.CreateDelegate(typeof(Action<ApiWorld, ApiWorldInstance?, bool, APIUser?>), target);
-            }
+		public static void DisplayWorldInfoPage(ApiWorld world, ApiWorldInstance? instance, bool hasInstanceId, APIUser? user)
+		{
+			if (ourShowWorldInfoPageDelegate == null)
+			{
+				var target = typeof(UiWorldList)
+					.GetMethods(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Static).Single(it =>
+						it.Name.StartsWith("Method_Public_Static_Void_ApiWorld_ApiWorldInstance_Boolean_APIUser_") &&
+						XrefScanner.XrefScan(it).Any(jt =>
+							jt.Type == XrefType.Global && jt.ReadAsObject()?.ToString() ==
+							"UserInterface/MenuContent/Screens/WorldInfo"));
 
-            ourShowWorldInfoPageDelegate(world, instance, hasInstanceId, user);
-        }
+				ourShowWorldInfoPageDelegate = (Action<ApiWorld, ApiWorldInstance?, bool, APIUser?>)Delegate.CreateDelegate(typeof(Action<ApiWorld, ApiWorldInstance?, bool, APIUser?>), target);
+			}
 
-        public static void DisplayErrorAvatar(this SimpleAvatarPedestal @this)
-        {
-            if (ourDisplayErrorAvatarDelegate == null)
-            {
-                var target = typeof(SimpleAvatarPedestal)
-                    .GetMethods(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance).Single(
-                        it =>
-                        {
-                            if (it.ReturnType != typeof(void) || it.Name.Contains("_PDM_")) return false;
-                            var parameters = it.GetParameters();
-                            if (parameters.Length != 0)
-                                return false;
+			ourShowWorldInfoPageDelegate(world, instance, hasInstanceId, user);
+		}
 
-                            return XrefScanner.XrefScan(it).Any(jt =>
-                                jt.Type == XrefType.Global && jt.ReadAsObject()?.ToString() == "local");
-                        });
+		public static void DisplayErrorAvatar(this SimpleAvatarPedestal @this)
+		{
+			if (ourDisplayErrorAvatarDelegate == null)
+			{
+				var target = typeof(SimpleAvatarPedestal)
+					.GetMethods(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance).Single(
+						it =>
+						{
+							if (it.ReturnType != typeof(void) || it.Name.Contains("_PDM_")) return false;
+							var parameters = it.GetParameters();
+							if (parameters.Length != 0)
+								return false;
 
-                ourDisplayErrorAvatarDelegate =
-                    (DisplayErrorAvatarDelegate) Delegate.CreateDelegate(typeof(DisplayErrorAvatarDelegate), target);
-            }
+							return XrefScanner.XrefScan(it).Any(jt =>
+								jt.Type == XrefType.Global && jt.ReadAsObject()?.ToString() == "local");
+						});
 
-            ourDisplayErrorAvatarDelegate(@this);
-        }
+				ourDisplayErrorAvatarDelegate =
+					(DisplayErrorAvatarDelegate)Delegate.CreateDelegate(typeof(DisplayErrorAvatarDelegate), target);
+			}
 
-        public static void Refresh(this SimpleAvatarPedestal pedestal, ApiAvatar avatar)
-        {
-            if (ourPedestalRefreshDelegate == null)
-            {
-                var target = typeof(SimpleAvatarPedestal)
-                    .GetMethods(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance).Single(
-                        it =>
-                        {
-                            if (it.ReturnType != typeof(void)) return false;
-                            var parameters = it.GetParameters();
-                            if (parameters.Length != 1 || parameters[0].ParameterType != typeof(ApiAvatar))
-                                return false;
+			ourDisplayErrorAvatarDelegate(@this);
+		}
 
-                            var strings = XrefScanner.XrefScan(it)
-                                .Select(jt => jt.Type == XrefType.Global ? jt.ReadAsObject()?.ToString() : null)
-                                .Where(jt => jt != null).ToHashSet(); 
-                            return strings.Contains("Refreshing with : ");
-                        });
+		public static void Refresh(this SimpleAvatarPedestal pedestal, ApiAvatar avatar)
+		{
+			if (ourPedestalRefreshDelegate == null)
+			{
+				var target = typeof(SimpleAvatarPedestal)
+					.GetMethods(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance).Single(
+						it =>
+						{
+							if (it.ReturnType != typeof(void)) return false;
+							var parameters = it.GetParameters();
+							if (parameters.Length != 1 || parameters[0].ParameterType != typeof(ApiAvatar))
+								return false;
 
-                ourPedestalRefreshDelegate =
-                    (PedestalRefreshDelegate) Delegate.CreateDelegate(typeof(PedestalRefreshDelegate), target);
-            }
+							var strings = XrefScanner.XrefScan(it)
+								.Select(jt => jt.Type == XrefType.Global ? jt.ReadAsObject()?.ToString() : null)
+								.Where(jt => jt != null).ToHashSet();
+							return strings.Contains("Refreshing with : ");
+						});
 
-            ourPedestalRefreshDelegate(pedestal, avatar);
-        }
-    }
+				ourPedestalRefreshDelegate =
+					(PedestalRefreshDelegate)Delegate.CreateDelegate(typeof(PedestalRefreshDelegate), target);
+			}
+
+			ourPedestalRefreshDelegate(pedestal, avatar);
+		}
+	}
 }

@@ -6,31 +6,31 @@ using UnityEngine;
 
 namespace UIExpansionKit.ControlsImpl
 {
-    public class BaseMenuControl : IMenuControl
-    {
-        private GameObject? myGameObject;
-        private bool myVisible = true;
-        
-        public virtual void ConsumeGameObject(GameObject obj)
-        {
-            myGameObject = obj;
-            obj.SetActive(myVisible);
-            
-            OnInstanceCreated?.Invoke(obj);
-        }
+	public class BaseMenuControl : IMenuControl
+	{
+		private GameObject? myGameObject;
+		private bool myVisible = true;
 
-        public bool Visible
-        {
-            get => myGameObject != null ? myGameObject.activeSelf : myVisible;
-            set
-            {
-                myVisible = value;
-                if (myGameObject != null) 
-                    myGameObject.SetActive(value);
-            }
-        }
+		public virtual void ConsumeGameObject(GameObject obj)
+		{
+			myGameObject = obj;
+			obj.SetActive(myVisible);
 
-        public event Action<GameObject>? OnInstanceCreated;
-        public GameObject? CurrentInstance => myGameObject;
-    }
+			OnInstanceCreated?.Invoke(obj);
+		}
+
+		public bool Visible
+		{
+			get => myGameObject != null ? myGameObject.activeSelf : myVisible;
+			set
+			{
+				myVisible = value;
+				if (myGameObject != null)
+					myGameObject.SetActive(value);
+			}
+		}
+
+		public event Action<GameObject>? OnInstanceCreated;
+		public GameObject? CurrentInstance => myGameObject;
+	}
 }

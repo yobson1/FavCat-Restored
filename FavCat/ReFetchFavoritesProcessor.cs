@@ -13,78 +13,78 @@ using Random = UnityEngine.Random;
 
 namespace FavCat
 {
-    public static class ReFetchFavoritesProcessor
-    {
-        public static bool ImportRunning { get; private set; }
+	public static class ReFetchFavoritesProcessor
+	{
+		public static bool ImportRunning { get; private set; }
 
-        public static string ImportStatusOuter { get; private set; } = "Not importing";
-        public static string ImportStatusInner { get; private set; } = "";
-        
-        public static async Task ReFetchFavorites()
-        {
-            ImportRunning = true;
-            ImportStatusOuter = "Re-fetch running...";
+		public static string ImportStatusOuter { get; private set; } = "Not importing";
+		public static string ImportStatusInner { get; private set; } = "";
 
-            var database = FavCatMod.Database;
-            
-            ImportStatusOuter = "Fetching worlds...";
-            var worldFavs = database.WorldFavorites.myStoredFavorites.FindAll().ToList();
-            for (var i = 0; i < worldFavs.Count; i++)
-            {
-                ImportStatusInner = i + "/" + worldFavs.Count;
-                
-                var storedFavorite = worldFavs[i];
-                if (database.myStoredWorlds.FindById(storedFavorite.ObjectId) != null) continue;
+		public static async Task ReFetchFavorites()
+		{
+			ImportRunning = true;
+			ImportStatusOuter = "Re-fetch running...";
 
-                await TaskUtilities.YieldToMainThread();
+			var database = FavCatMod.Database;
 
-                new ApiWorld {id = storedFavorite.ObjectId}.Fetch(null, new Action<ApiContainer>(c =>
-                {
-                    if (c.Code == 404) database.CompletelyDeleteWorld(storedFavorite.ObjectId);
-                }));
+			ImportStatusOuter = "Fetching worlds...";
+			var worldFavs = database.WorldFavorites.myStoredFavorites.FindAll().ToList();
+			for (var i = 0; i < worldFavs.Count; i++)
+			{
+				ImportStatusInner = i + "/" + worldFavs.Count;
 
-                await Task.Delay(TimeSpan.FromSeconds(5f + Random.Range(0f, 5f))).ConfigureAwait(false);
-            }
+				var storedFavorite = worldFavs[i];
+				if (database.myStoredWorlds.FindById(storedFavorite.ObjectId) != null) continue;
 
-            ImportStatusOuter = "Fetching avatars...";
-            var avatarFavs = database.AvatarFavorites.myStoredFavorites.FindAll().ToList();
-            for (var i = 0; i < avatarFavs.Count; i++)
-            {
-                ImportStatusInner = i + "/" + avatarFavs.Count;
-                
-                var storedFavorite = avatarFavs[i];
-                if (database.myStoredAvatars.FindById(storedFavorite.ObjectId) != null) continue;
+				await TaskUtilities.YieldToMainThread();
 
-                    await TaskUtilities.YieldToMainThread();
+				new ApiWorld { id = storedFavorite.ObjectId }.Fetch(null, new Action<ApiContainer>(c =>
+				{
+					if (c.Code == 404) database.CompletelyDeleteWorld(storedFavorite.ObjectId);
+				}));
 
-                new ApiAvatar {id = storedFavorite.ObjectId}.Fetch(null, new Action<ApiContainer>(c =>
-                {
-                    if (c.Code == 404) database.CompletelyDeleteAvatar(storedFavorite.ObjectId);
-                }));
+				await Task.Delay(TimeSpan.FromSeconds(5f + Random.Range(0f, 5f))).ConfigureAwait(false);
+			}
 
-                await Task.Delay(TimeSpan.FromSeconds(5f + Random.Range(0f, 5f))).ConfigureAwait(false);
-            }
-            
-            ImportStatusOuter = "Fetching players...";
-            var playerFavs = database.PlayerFavorites.myStoredFavorites.FindAll().ToList();
-            for (var i = 0; i < playerFavs.Count; i++)
-            {
-                ImportStatusInner = i + "/" + playerFavs.Count;
-                
-                var storedFavorite = playerFavs[i];
-                if (database.myStoredPlayers.FindById(storedFavorite.ObjectId) != null) continue;
+			ImportStatusOuter = "Fetching avatars...";
+			var avatarFavs = database.AvatarFavorites.myStoredFavorites.FindAll().ToList();
+			for (var i = 0; i < avatarFavs.Count; i++)
+			{
+				ImportStatusInner = i + "/" + avatarFavs.Count;
 
-                await TaskUtilities.YieldToMainThread();
+				var storedFavorite = avatarFavs[i];
+				if (database.myStoredAvatars.FindById(storedFavorite.ObjectId) != null) continue;
 
-                new APIUser {id = storedFavorite.ObjectId}.Fetch(new Action<ApiContainer>(c =>
-                {
-                    if (c.Code == 404) database.CompletelyDeletePlayer(storedFavorite.ObjectId);
-                }));
+				await TaskUtilities.YieldToMainThread();
 
-                await Task.Delay(TimeSpan.FromSeconds(5f + Random.Range(0f, 5f))).ConfigureAwait(false);
-            }
-            
-            ImportRunning = false;
-        }
-    }
+				new ApiAvatar { id = storedFavorite.ObjectId }.Fetch(null, new Action<ApiContainer>(c =>
+				{
+					if (c.Code == 404) database.CompletelyDeleteAvatar(storedFavorite.ObjectId);
+				}));
+
+				await Task.Delay(TimeSpan.FromSeconds(5f + Random.Range(0f, 5f))).ConfigureAwait(false);
+			}
+
+			ImportStatusOuter = "Fetching players...";
+			var playerFavs = database.PlayerFavorites.myStoredFavorites.FindAll().ToList();
+			for (var i = 0; i < playerFavs.Count; i++)
+			{
+				ImportStatusInner = i + "/" + playerFavs.Count;
+
+				var storedFavorite = playerFavs[i];
+				if (database.myStoredPlayers.FindById(storedFavorite.ObjectId) != null) continue;
+
+				await TaskUtilities.YieldToMainThread();
+
+				new APIUser { id = storedFavorite.ObjectId }.Fetch(new Action<ApiContainer>(c =>
+				{
+					if (c.Code == 404) database.CompletelyDeletePlayer(storedFavorite.ObjectId);
+				}));
+
+				await Task.Delay(TimeSpan.FromSeconds(5f + Random.Range(0f, 5f))).ConfigureAwait(false);
+			}
+
+			ImportRunning = false;
+		}
+	}
 }

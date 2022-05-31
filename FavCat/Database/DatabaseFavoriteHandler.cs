@@ -6,118 +6,118 @@ using LiteDB;
 
 namespace FavCat.Database
 {
-    public class DatabaseFavoriteHandler<T> where T: class
-    {
-        public readonly DatabaseEntity entityType;
-        internal readonly ILiteCollection<StoredFavorite> myStoredFavorites;
-        private readonly ILiteCollection<StoredCategory> myStoredCategories;
-        private readonly ILiteCollection<T> myObjectStore;
-        private readonly ILiteCollection<StoredCategoryOrder> myStoredOrders;
+	public class DatabaseFavoriteHandler<T> where T : class
+	{
+		public readonly DatabaseEntity entityType;
+		internal readonly ILiteCollection<StoredFavorite> myStoredFavorites;
+		private readonly ILiteCollection<StoredCategory> myStoredCategories;
+		private readonly ILiteCollection<T> myObjectStore;
+		private readonly ILiteCollection<StoredCategoryOrder> myStoredOrders;
 
-        public event Action<string>? OnCategoryContentsChanged;
+		public event Action<string>? OnCategoryContentsChanged;
 
-        public DatabaseFavoriteHandler(LiteDatabase database, DatabaseEntity entityType, ILiteCollection<T> objectStore,
-            ILiteCollection<StoredCategoryOrder> storedOrders)
-        {
-            this.entityType = entityType;
-            myObjectStore = objectStore;
-            myStoredOrders = storedOrders;
+		public DatabaseFavoriteHandler(LiteDatabase database, DatabaseEntity entityType, ILiteCollection<T> objectStore,
+			ILiteCollection<StoredCategoryOrder> storedOrders)
+		{
+			this.entityType = entityType;
+			myObjectStore = objectStore;
+			myStoredOrders = storedOrders;
 
-            var entityName = entityType.ToString();
-            myStoredFavorites = database.GetCollection<StoredFavorite>($"{entityName}_favorites");
-            myStoredCategories = database.GetCollection<StoredCategory>($"{entityName}_categories");
+			var entityName = entityType.ToString();
+			myStoredFavorites = database.GetCollection<StoredFavorite>($"{entityName}_favorites");
+			myStoredCategories = database.GetCollection<StoredCategory>($"{entityName}_categories");
 
-            myStoredFavorites.EnsureIndex("ObjectAndCategory", it => it.ObjectId + it.Category, true);
-            
-            myStoredFavorites.EnsureIndex(it => it.ObjectId);
-            myStoredFavorites.EnsureIndex(it => it.Category);
-        }
+			myStoredFavorites.EnsureIndex("ObjectAndCategory", it => it.ObjectId + it.Category, true);
 
-        public StoredCategoryOrder GetStoredOrder()
-        {
-            return myStoredOrders.FindById(entityType.ToString()) ?? new StoredCategoryOrder {EntityType = entityType};
-        }
+			myStoredFavorites.EnsureIndex(it => it.ObjectId);
+			myStoredFavorites.EnsureIndex(it => it.Category);
+		}
 
-        public void SetStoredOrder(List<CategoryInfo> order, List<string> defaultListsToHide)
-        {
-            myStoredOrders.Upsert(new StoredCategoryOrder {EntityType = entityType, Order = order, DefaultListsToHide = defaultListsToHide});
-        }
+		public StoredCategoryOrder GetStoredOrder()
+		{
+			return myStoredOrders.FindById(entityType.ToString()) ?? new StoredCategoryOrder { EntityType = entityType };
+		}
 
-        public void AddFavorite(string objectId, string category)
-        {
-            myStoredFavorites.Upsert(new StoredFavorite {AddedOn = DateTime.UtcNow, Category = category, ObjectId = objectId});
-            OnCategoryContentsChanged?.Invoke(category);
-        }
+		public void SetStoredOrder(List<CategoryInfo> order, List<string> defaultListsToHide)
+		{
+			myStoredOrders.Upsert(new StoredCategoryOrder { EntityType = entityType, Order = order, DefaultListsToHide = defaultListsToHide });
+		}
 
-        public IEnumerable<(StoredFavorite, T)> ListFavorites(string category)
-        {
-            return myStoredFavorites.Find(it => it.Category == category).Select(it => (it, myObjectStore.FindById(it.ObjectId))).Where(it => it.Item2 != null);
-        }
+		public void AddFavorite(string objectId, string category)
+		{
+			myStoredFavorites.Upsert(new StoredFavorite { AddedOn = DateTime.UtcNow, Category = category, ObjectId = objectId });
+			OnCategoryContentsChanged?.Invoke(category);
+		}
 
-        private StoredFavorite? GetFavorite(string objectId, string category)
-        {
-            var target = objectId + category;
-            return myStoredFavorites.FindOne(it => it.ObjectId + it.Category == target);
-        }
+		public IEnumerable<(StoredFavorite, T)> ListFavorites(string category)
+		{
+			return myStoredFavorites.Find(it => it.Category == category).Select(it => (it, myObjectStore.FindById(it.ObjectId))).Where(it => it.Item2 != null);
+		}
 
-        public bool IsFavorite(string objectId, string category)
-        {
-            return GetFavorite(objectId, category) != null;
-        }
+		private StoredFavorite? GetFavorite(string objectId, string category)
+		{
+			var target = objectId + category;
+			return myStoredFavorites.FindOne(it => it.ObjectId + it.Category == target);
+		}
 
-        public StoredCategory? GetCategory(string category)
-        {
-            return myStoredCategories.FindById(category);
-        }
+		public bool IsFavorite(string objectId, string category)
+		{
+			return GetFavorite(objectId, category) != null;
+		}
 
-        public void UpdateCategory(StoredCategory category)
-        {
-            myStoredCategories.Upsert(category);
-        }
+		public StoredCategory? GetCategory(string category)
+		{
+			return myStoredCategories.FindById(category);
+		}
 
-        public void DeleteCategory(StoredCategory category)
-        {
-            myStoredFavorites.DeleteMany(it => it.Category == category.CategoryName);
-            myStoredCategories.Delete(category.CategoryName);
-        }
+		public void UpdateCategory(StoredCategory category)
+		{
+			myStoredCategories.Upsert(category);
+		}
 
-        public IEnumerable<StoredCategory> GetCategories()
-        {
-            return myStoredCategories.FindAll();
-        }
+		public void DeleteCategory(StoredCategory category)
+		{
+			myStoredFavorites.DeleteMany(it => it.Category == category.CategoryName);
+			myStoredCategories.Delete(category.CategoryName);
+		}
 
-        public void DeleteFavoriteFromAllCategories(string id)
-        {
-            var favs = myStoredFavorites.Find(it => it.ObjectId == id).ToList();
-            foreach (var storedFavorite in favs) 
-                myStoredFavorites.Delete(storedFavorite.FavoriteId);
-            
-            foreach (var affectedCategory in favs.Select(it => it.Category).Distinct())
-                OnCategoryContentsChanged?.Invoke(affectedCategory);
-        }
+		public IEnumerable<StoredCategory> GetCategories()
+		{
+			return myStoredCategories.FindAll();
+		}
 
-        public void DeleteFavorite(string id, string categoryName)
-        {
-            var favorite = GetFavorite(id, categoryName);
-            if (favorite == null) return;
-            myStoredFavorites.Delete(favorite.FavoriteId);
-            OnCategoryContentsChanged?.Invoke(categoryName);
-        }
+		public void DeleteFavoriteFromAllCategories(string id)
+		{
+			var favs = myStoredFavorites.Find(it => it.ObjectId == id).ToList();
+			foreach (var storedFavorite in favs)
+				myStoredFavorites.Delete(storedFavorite.FavoriteId);
 
-        public void RenameCategory(StoredCategory category, string newName)
-        {
-            var oldName = category.CategoryName;
-            myStoredCategories.Delete(oldName);
-            foreach (var storedFavorite in myStoredFavorites.Find(it => it.Category == oldName))
-            {
-                storedFavorite.Category = newName;
-                myStoredFavorites.Update(storedFavorite);
-            }
+			foreach (var affectedCategory in favs.Select(it => it.Category).Distinct())
+				OnCategoryContentsChanged?.Invoke(affectedCategory);
+		}
 
-            category.CategoryName = newName;
-            myStoredCategories.Upsert(category);
-            
-            // no events fired
-        }
-    }
+		public void DeleteFavorite(string id, string categoryName)
+		{
+			var favorite = GetFavorite(id, categoryName);
+			if (favorite == null) return;
+			myStoredFavorites.Delete(favorite.FavoriteId);
+			OnCategoryContentsChanged?.Invoke(categoryName);
+		}
+
+		public void RenameCategory(StoredCategory category, string newName)
+		{
+			var oldName = category.CategoryName;
+			myStoredCategories.Delete(oldName);
+			foreach (var storedFavorite in myStoredFavorites.Find(it => it.Category == oldName))
+			{
+				storedFavorite.Category = newName;
+				myStoredFavorites.Update(storedFavorite);
+			}
+
+			category.CategoryName = newName;
+			myStoredCategories.Upsert(category);
+
+			// no events fired
+		}
+	}
 }
