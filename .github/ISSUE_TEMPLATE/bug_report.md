@@ -3,7 +3,7 @@ name: Bug report
 about: Tell me what's wrong
 title: "[BUG] "
 labels: bug
-assignees: FelkonEx
+assignees: yobson1
 
 ---
 
