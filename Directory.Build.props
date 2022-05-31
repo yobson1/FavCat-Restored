@@ -1,121 +1,216 @@
 <Project>
+	<PropertyGroup>
+		<VRChatPath>C:\Program Files (x86)\Steam\steamapps\common\VRChat\</VRChatPath>
+	</PropertyGroup>
+
 	<ItemGroup Condition="'$(NoModReferences)' != 'true'">
 		<Reference Include="0Harmony, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
 			<SpecificVersion>false</SpecificVersion>
 			<Private>false</Private>
-			<HintPath>$(MsBuildThisFileDirectory)Libs\0Harmony.dll</HintPath>
-		</Reference>
-		<Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-			<SpecificVersion>false</SpecificVersion>
-			<Private>false</Private>
-			<HintPath>$(MsBuildThisFileDirectory)Libs\UnityEngine.dll</HintPath>
-		</Reference>
-		<Reference Include="UnityEngine.AssetBundleModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-			<SpecificVersion>false</SpecificVersion>
-			<Private>false</Private>
-			<HintPath>$(MsBuildThisFileDirectory)Libs\UnityEngine.AssetBundleModule.dll</HintPath>
-		</Reference>
-		<Reference Include="UnityEngine.AudioModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-			<SpecificVersion>false</SpecificVersion>
-			<Private>false</Private>
-			<HintPath>$(MsBuildThisFileDirectory)Libs\UnityEngine.AudioModule.dll</HintPath>
-		</Reference>
-		<Reference Include="UnityEngine.AnimationModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-			<SpecificVersion>false</SpecificVersion>
-			<Private>false</Private>
-			<HintPath>$(MsBuildThisFileDirectory)Libs\UnityEngine.AnimationModule.dll</HintPath>
-		</Reference>
-		<Reference Include="UnityEngine.ClothModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-			<SpecificVersion>false</SpecificVersion>
-			<Private>false</Private>
-			<HintPath>$(MsBuildThisFileDirectory)Libs\UnityEngine.ClothModule.dll</HintPath>
-		</Reference>
-		<Reference Include="UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-			<SpecificVersion>false</SpecificVersion>
-			<Private>false</Private>
-			<HintPath>$(MsBuildThisFileDirectory)Libs\UnityEngine.CoreModule.dll</HintPath>
-		</Reference>
-		<Reference Include="UnityEngine.UI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-			<SpecificVersion>false</SpecificVersion>
-			<Private>false</Private>
-			<HintPath>$(MsBuildThisFileDirectory)Libs\UnityEngine.UI.dll</HintPath>
-		</Reference>
-		<Reference Include="UnityEngine.UIModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-			<SpecificVersion>false</SpecificVersion>
-			<Private>false</Private>
-			<HintPath>$(MsBuildThisFileDirectory)Libs\UnityEngine.UIModule.dll</HintPath>
-		</Reference>
-		<Reference Include="UnityEngine.TextRenderingModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-			<SpecificVersion>false</SpecificVersion>
-			<Private>false</Private>
-			<HintPath>$(MsBuildThisFileDirectory)Libs\UnityEngine.TextRenderingModule.dll</HintPath>
-		</Reference>
-		<Reference Include="UnityEngine.ParticleSystemModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-			<SpecificVersion>false</SpecificVersion>
-			<Private>false</Private>
-			<HintPath>$(MsBuildThisFileDirectory)Libs\UnityEngine.ParticleSystemModule.dll</HintPath>
-		</Reference>
-		<Reference Include="UnityEngine.PhysicsModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-			<SpecificVersion>false</SpecificVersion>
-			<Private>false</Private>
-			<HintPath>$(MsBuildThisFileDirectory)Libs\UnityEngine.PhysicsModule.dll</HintPath>
-		</Reference>
-		<Reference Include="Unity.Postprocessing.Runtime, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-			<SpecificVersion>false</SpecificVersion>
-			<Private>false</Private>
-			<HintPath>$(MsBuildThisFileDirectory)Libs\Unity.Postprocessing.Runtime.dll</HintPath>
-		</Reference>
-		<Reference Include="UnityEngine.UnityWebRequestModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-			<SpecificVersion>false</SpecificVersion>
-			<Private>false</Private>
-			<HintPath>$(MsBuildThisFileDirectory)Libs\UnityEngine.UnityWebRequestModule.dll</HintPath>
-		</Reference>
-		<Reference Include="UnityEngine.UnityWebRequestWWWModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-			<SpecificVersion>false</SpecificVersion>
-			<Private>false</Private>
-			<HintPath>$(MsBuildThisFileDirectory)Libs\UnityEngine.UnityWebRequestWWWModule.dll</HintPath>
-		</Reference>
-		<Reference Include="UnityEngine.XRModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-			<SpecificVersion>false</SpecificVersion>
-			<Private>false</Private>
-			<HintPath>$(MsBuildThisFileDirectory)Libs\UnityEngine.XRModule.dll</HintPath>
-		</Reference>
-		<Reference Include="UnityEngine.VRModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-			<SpecificVersion>false</SpecificVersion>
-			<Private>false</Private>
-			<HintPath>$(MsBuildThisFileDirectory)Libs\UnityEngine.VRModule.dll</HintPath>
-		</Reference>
-		<Reference Include="Unity.TextMeshPro, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-			<SpecificVersion>false</SpecificVersion>
-			<Private>false</Private>
-			<HintPath>$(MsBuildThisFileDirectory)Libs\Unity.TextMeshPro.dll</HintPath>
+			<HintPath>$(VRChatPath)MelonLoader\0Harmony.dll</HintPath>
 		</Reference>
 		<Reference Include="MelonLoader, Version=0.3.0.0, Culture=neutral, PublicKeyToken=null">
 			<SpecificVersion>false</SpecificVersion>
 			<Private>false</Private>
-			<HintPath>$(MsBuildThisFileDirectory)Libs\MelonLoader.dll</HintPath>
+			<HintPath>$(VRChatPath)MelonLoader\MelonLoader.dll</HintPath>
+		</Reference>
+		<Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+			<SpecificVersion>false</SpecificVersion>
+			<Private>false</Private>
+			<HintPath>$(VRChatPath)MelonLoader\Managed\UnityEngine.dll</HintPath>
+		</Reference>
+		<Reference Include="UnityEngine.AssetBundleModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+			<SpecificVersion>false</SpecificVersion>
+			<Private>false</Private>
+			<HintPath>$(VRChatPath)MelonLoader\Managed\UnityEngine.AssetBundleModule.dll</HintPath>
+		</Reference>
+		<Reference Include="UnityEngine.AudioModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+			<SpecificVersion>false</SpecificVersion>
+			<Private>false</Private>
+			<HintPath>$(VRChatPath)MelonLoader\Managed\UnityEngine.AudioModule.dll</HintPath>
+		</Reference>
+		<Reference Include="UnityEngine.AnimationModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+			<SpecificVersion>false</SpecificVersion>
+			<Private>false</Private>
+			<HintPath>$(VRChatPath)MelonLoader\Managed\UnityEngine.AnimationModule.dll</HintPath>
+		</Reference>
+		<Reference Include="UnityEngine.ClothModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+			<SpecificVersion>false</SpecificVersion>
+			<Private>false</Private>
+			<HintPath>$(VRChatPath)MelonLoader\Managed\UnityEngine.ClothModule.dll</HintPath>
+		</Reference>
+		<Reference Include="UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+			<SpecificVersion>false</SpecificVersion>
+			<Private>false</Private>
+			<HintPath>$(VRChatPath)MelonLoader\Managed\UnityEngine.CoreModule.dll</HintPath>
+		</Reference>
+		<Reference Include="UnityEngine.UI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+			<SpecificVersion>false</SpecificVersion>
+			<Private>false</Private>
+			<HintPath>$(VRChatPath)MelonLoader\Managed\UnityEngine.UI.dll</HintPath>
+		</Reference>
+		<Reference Include="UnityEngine.UIModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+			<SpecificVersion>false</SpecificVersion>
+			<Private>false</Private>
+			<HintPath>$(VRChatPath)MelonLoader\Managed\UnityEngine.UIModule.dll</HintPath>
+		</Reference>
+		<Reference Include="UnityEngine.TextRenderingModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+			<SpecificVersion>false</SpecificVersion>
+			<Private>false</Private>
+			<HintPath>$(VRChatPath)MelonLoader\Managed\UnityEngine.TextRenderingModule.dll</HintPath>
+		</Reference>
+		<Reference Include="UnityEngine.ParticleSystemModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+			<SpecificVersion>false</SpecificVersion>
+			<Private>false</Private>
+			<HintPath>$(VRChatPath)MelonLoader\Managed\UnityEngine.ParticleSystemModule.dll</HintPath>
+		</Reference>
+		<Reference Include="UnityEngine.PhysicsModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+			<SpecificVersion>false</SpecificVersion>
+			<Private>false</Private>
+			<HintPath>$(VRChatPath)MelonLoader\Managed\UnityEngine.PhysicsModule.dll</HintPath>
+		</Reference>
+		<Reference Include="Unity.Postprocessing.Runtime, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+			<SpecificVersion>false</SpecificVersion>
+			<Private>false</Private>
+			<HintPath>$(VRChatPath)MelonLoader\Managed\Unity.Postprocessing.Runtime.dll</HintPath>
+		</Reference>
+		<Reference Include="UnityEngine.UnityWebRequestModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+			<SpecificVersion>false</SpecificVersion>
+			<Private>false</Private>
+			<HintPath>$(VRChatPath)MelonLoader\Managed\UnityEngine.UnityWebRequestModule.dll</HintPath>
+		</Reference>
+		<Reference Include="UnityEngine.UnityWebRequestWWWModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+			<SpecificVersion>false</SpecificVersion>
+			<Private>false</Private>
+			<HintPath>$(VRChatPath)MelonLoader\Managed\UnityEngine.UnityWebRequestWWWModule.dll</HintPath>
+		</Reference>
+		<Reference Include="UnityEngine.XRModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+			<SpecificVersion>false</SpecificVersion>
+			<Private>false</Private>
+			<HintPath>$(VRChatPath)MelonLoader\Managed\UnityEngine.XRModule.dll</HintPath>
+		</Reference>
+		<Reference Include="UnityEngine.VRModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+			<SpecificVersion>false</SpecificVersion>
+			<Private>false</Private>
+			<HintPath>$(VRChatPath)MelonLoader\Managed\UnityEngine.VRModule.dll</HintPath>
+		</Reference>
+		<Reference Include="Unity.TextMeshPro, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+			<SpecificVersion>false</SpecificVersion>
+			<Private>false</Private>
+			<HintPath>$(VRChatPath)MelonLoader\Managed\Unity.TextMeshPro.dll</HintPath>
 		</Reference>
 		<Reference Include="UnhollowerBaseLib, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
 			<SpecificVersion>false</SpecificVersion>
 			<Private>false</Private>
-			<HintPath>$(MsBuildThisFileDirectory)Libs\UnhollowerBaseLib.dll</HintPath>
+			<HintPath>$(VRChatPath)MelonLoader\Managed\UnhollowerBaseLib.dll</HintPath>
 		</Reference>
 		<Reference Include="Il2Cppmscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=null">
 			<SpecificVersion>false</SpecificVersion>
 			<Private>false</Private>
-			<HintPath>$(MsBuildThisFileDirectory)Libs\Il2Cppmscorlib.dll</HintPath>
+			<HintPath>$(VRChatPath)MelonLoader\Managed\Il2Cppmscorlib.dll</HintPath>
 		</Reference>
 		<Reference Include="Il2CppSystem, Version=4.0.0.0, Culture=neutral, PublicKeyToken=null">
 			<SpecificVersion>false</SpecificVersion>
 			<Private>false</Private>
-			<HintPath>$(MsBuildThisFileDirectory)Libs\Il2CppSystem.dll</HintPath>
+			<HintPath>$(VRChatPath)MelonLoader\Managed\Il2CppSystem.dll</HintPath>
 		</Reference>
 		<Reference Include="Il2CppSystem.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=null">
 			<SpecificVersion>false</SpecificVersion>
 			<Private>false</Private>
-			<HintPath>$(MsBuildThisFileDirectory)Libs\Il2CppSystem.Core.dll</HintPath>
+			<HintPath>$(VRChatPath)MelonLoader\Managed\Il2CppSystem.Core.dll</HintPath>
+		</Reference>
+		<Reference Include="Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+			<SpecificVersion>false</SpecificVersion>
+			<Private>false</Private>
+			<HintPath>$(VRChatPath)MelonLoader\Managed\Assembly-CSharp.dll</HintPath>
+		</Reference>
+		<Reference Include="Assembly-CSharp-firstpass, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+			<SpecificVersion>false</SpecificVersion>
+			<Private>false</Private>
+			<HintPath>$(VRChatPath)MelonLoader\Managed\Assembly-CSharp-firstpass.dll</HintPath>
+		</Reference>
+		<Reference Include="VRCCore-Standalone, Version=0.0.0.0, Culture=neutral, PublicKeyToken=67033c44591afb45">
+			<SpecificVersion>false</SpecificVersion>
+			<Private>false</Private>
+			<HintPath>$(VRChatPath)MelonLoader\Managed\VRCCore-Standalone.dll</HintPath>
+		</Reference>
+		<Reference Include="VRCCore-Editor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=67033c44591afb45">
+			<SpecificVersion>false</SpecificVersion>
+			<Private>false</Private>
+			<HintPath>$(VRChatPath)MelonLoader\Managed\VRCCore-Editor.dll</HintPath>
+		</Reference>
+		<Reference Include="VRCSDK2, Version=0.0.0.0, Culture=neutral, PublicKeyToken=67033c44591afb45">
+			<SpecificVersion>false</SpecificVersion>
+			<Private>false</Private>
+			<HintPath>$(VRChatPath)MelonLoader\Managed\VRCSDK2.dll</HintPath>
+		</Reference>
+		<Reference Include="VRCSDKBase, Version=0.0.0.0, Culture=neutral, PublicKeyToken=67033c44591afb45">
+			<SpecificVersion>false</SpecificVersion>
+			<Private>false</Private>
+			<HintPath>$(VRChatPath)MelonLoader\Managed\VRCSDKBase.dll</HintPath>
+		</Reference>
+		<Reference Include="Facepunch.Steamworks.Win64, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+			<SpecificVersion>false</SpecificVersion>
+			<Private>false</Private>
+			<HintPath>$(VRChatPath)MelonLoader\Managed\Facepunch.Steamworks.Win64.dll</HintPath>
+		</Reference>
+		<Reference Include="Rug.Osc, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+			<SpecificVersion>false</SpecificVersion>
+			<Private>false</Private>
+			<HintPath>$(VRChatPath)MelonLoader\Managed\Rug.Osc.dll</HintPath>
+		</Reference>
+		<Reference Include="UniTask, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+			<SpecificVersion>false</SpecificVersion>
+			<Private>false</Private>
+			<HintPath>$(VRChatPath)MelonLoader\Managed\UniTask.dll</HintPath>
+		</Reference>
+		<Reference Include="DataModel, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+			<SpecificVersion>false</SpecificVersion>
+			<Private>false</Private>
+			<HintPath>$(VRChatPath)MelonLoader\Managed\DataModel.dll</HintPath>
+		</Reference>
+		<Reference Include="VRC.UI.Core, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+			<SpecificVersion>false</SpecificVersion>
+			<Private>false</Private>
+			<HintPath>$(VRChatPath)MelonLoader\Managed\VRC.UI.Core.dll</HintPath>
+		</Reference>
+		<Reference Include="VRC.UI.Elements, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+			<SpecificVersion>false</SpecificVersion>
+			<Private>false</Private>
+			<HintPath>$(VRChatPath)MelonLoader\Managed\VRC.UI.Elements.dll</HintPath>
+		</Reference>
+		<Reference Include="VRC.Udon, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+			<SpecificVersion>false</SpecificVersion>
+			<Private>false</Private>
+			<HintPath>$(VRChatPath)MelonLoader\Managed\VRC.Udon.dll</HintPath>
+		</Reference>
+		<Reference Include="VRC.Udon.Common, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+			<SpecificVersion>false</SpecificVersion>
+			<Private>false</Private>
+			<HintPath>$(VRChatPath)MelonLoader\Managed\VRC.Udon.Common.dll</HintPath>
+		</Reference>
+		<Reference Include="VRC.Udon.ClientBindings, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+			<SpecificVersion>false</SpecificVersion>
+			<Private>false</Private>
+			<HintPath>$(VRChatPath)MelonLoader\Managed\VRC.Udon.ClientBindings.dll</HintPath>
+		</Reference>
+		<Reference Include="VRC.Udon.Wrapper, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+			<SpecificVersion>false</SpecificVersion>
+			<Private>false</Private>
+			<HintPath>$(VRChatPath)MelonLoader\Managed\VRC.Udon.Wrapper.dll</HintPath>
+		</Reference>
+		<Reference Include="VRCSDK3, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+			<SpecificVersion>false</SpecificVersion>
+			<Private>false</Private>
+			<HintPath>$(VRChatPath)MelonLoader\Managed\VRCSDK3.dll</HintPath>
+		</Reference>
+		<Reference Include="Il2CppSystem.Collections.Immutable, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+			<SpecificVersion>false</SpecificVersion>
+			<Private>false</Private>
+			<HintPath>$(VRChatPath)MelonLoader\Managed\Il2CppSystem.Collections.Immutable.dll</HintPath>
 		</Reference>
 	</ItemGroup>
+
 	<ItemGroup Condition="'$(NoModReferences)' != 'true'">
 		<EmbeddedResource Include="$(MsBuildThisFileDirectory)/Common/_dummy_.dll" Link="Common/_dummy_.dll" />
 		<EmbeddedResource Include="$(MsBuildThisFileDirectory)/Common/_dummy2_.dll" Link="Common/_dummy2_.dll" />
@@ -126,98 +221,6 @@
 	</ItemGroup>
 	<ItemGroup Condition="'$(UsesNativePatches)' == 'true'">
 		<Compile Include="$(MsBuildThisFileDirectory)/Common/NativePatchUtils.cs" Link="Common/NativePatchUtils.cs" />
-	</ItemGroup>
-	<ItemGroup Condition="'$(NoModReferences)' != 'true'">
-		<Reference Include="Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-			<SpecificVersion>false</SpecificVersion>
-			<Private>false</Private>
-			<HintPath>$(MsBuildThisFileDirectory)Libs\Assembly-CSharp.dll</HintPath>
-		</Reference>
-		<Reference Include="Assembly-CSharp-firstpass, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-			<SpecificVersion>false</SpecificVersion>
-			<Private>false</Private>
-			<HintPath>$(MsBuildThisFileDirectory)Libs\Assembly-CSharp-firstpass.dll</HintPath>
-		</Reference>
-		<Reference Include="VRCCore-Standalone, Version=0.0.0.0, Culture=neutral, PublicKeyToken=67033c44591afb45">
-			<SpecificVersion>false</SpecificVersion>
-			<Private>false</Private>
-			<HintPath>$(MsBuildThisFileDirectory)Libs\VRCCore-Standalone.dll</HintPath>
-		</Reference>
-		<Reference Include="VRCCore-Editor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=67033c44591afb45">
-			<SpecificVersion>false</SpecificVersion>
-			<Private>false</Private>
-			<HintPath>$(MsBuildThisFileDirectory)Libs\VRCCore-Editor.dll</HintPath>
-		</Reference>
-		<Reference Include="VRCSDK2, Version=0.0.0.0, Culture=neutral, PublicKeyToken=67033c44591afb45">
-			<SpecificVersion>false</SpecificVersion>
-			<Private>false</Private>
-			<HintPath>$(MsBuildThisFileDirectory)Libs\VRCSDK2.dll</HintPath>
-		</Reference>
-		<Reference Include="VRCSDKBase, Version=0.0.0.0, Culture=neutral, PublicKeyToken=67033c44591afb45">
-			<SpecificVersion>false</SpecificVersion>
-			<Private>false</Private>
-			<HintPath>$(MsBuildThisFileDirectory)Libs\VRCSDKBase.dll</HintPath>
-		</Reference>
-		<Reference Include="Facepunch.Steamworks.Win64, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-			<SpecificVersion>false</SpecificVersion>
-			<Private>false</Private>
-			<HintPath>$(MsBuildThisFileDirectory)Libs\Facepunch.Steamworks.Win64.dll</HintPath>
-		</Reference>
-		<Reference Include="Rug.Osc, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-			<SpecificVersion>false</SpecificVersion>
-			<Private>false</Private>
-			<HintPath>$(MsBuildThisFileDirectory)Libs\Rug.Osc.dll</HintPath>
-		</Reference>
-		<Reference Include="UniTask, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-			<SpecificVersion>false</SpecificVersion>
-			<Private>false</Private>
-			<HintPath>$(MsBuildThisFileDirectory)Libs\UniTask.dll</HintPath>
-		</Reference>
-		<Reference Include="DataModel, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-			<SpecificVersion>false</SpecificVersion>
-			<Private>false</Private>
-			<HintPath>$(MsBuildThisFileDirectory)Libs\DataModel.dll</HintPath>
-		</Reference>
-		<Reference Include="VRC.UI.Core, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-			<SpecificVersion>false</SpecificVersion>
-			<Private>false</Private>
-			<HintPath>$(MsBuildThisFileDirectory)Libs\VRC.UI.Core.dll</HintPath>
-		</Reference>
-		<Reference Include="VRC.UI.Elements, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-			<SpecificVersion>false</SpecificVersion>
-			<Private>false</Private>
-			<HintPath>$(MsBuildThisFileDirectory)Libs\VRC.UI.Elements.dll</HintPath>
-		</Reference>
-		<Reference Include="VRC.Udon, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-			<SpecificVersion>false</SpecificVersion>
-			<Private>false</Private>
-			<HintPath>$(MsBuildThisFileDirectory)Libs\VRC.Udon.dll</HintPath>
-		</Reference>
-		<Reference Include="VRC.Udon.Common, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-			<SpecificVersion>false</SpecificVersion>
-			<Private>false</Private>
-			<HintPath>$(MsBuildThisFileDirectory)Libs\VRC.Udon.Common.dll</HintPath>
-		</Reference>
-		<Reference Include="VRC.Udon.ClientBindings, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-			<SpecificVersion>false</SpecificVersion>
-			<Private>false</Private>
-			<HintPath>$(MsBuildThisFileDirectory)Libs\VRC.Udon.ClientBindings.dll</HintPath>
-		</Reference>
-		<Reference Include="VRC.Udon.Wrapper, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-			<SpecificVersion>false</SpecificVersion>
-			<Private>false</Private>
-			<HintPath>$(MsBuildThisFileDirectory)Libs\VRC.Udon.Wrapper.dll</HintPath>
-		</Reference>
-		<Reference Include="VRCSDK3, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-			<SpecificVersion>false</SpecificVersion>
-			<Private>false</Private>
-			<HintPath>$(MsBuildThisFileDirectory)Libs\VRCSDK3.dll</HintPath>
-		</Reference>
-		<Reference Include="Il2CppSystem.Collections.Immutable, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-			<SpecificVersion>false</SpecificVersion>
-			<Private>false</Private>
-			<HintPath>$(MsBuildThisFileDirectory)Libs\Il2CppSystem.Collections.Immutable.dll</HintPath>
-		</Reference>
 	</ItemGroup>
 
 	<PropertyGroup>

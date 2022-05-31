@@ -36,10 +36,11 @@
       <InputAssemblies Include="$(OutputPath)/System.Runtime.CompilerServices.Unsafe.dll" />
 
       <IlRepackLibs Include="$(OutputPath)" />
-      <IlRepackLibs Include="$(MsBuildThisFileDirectory)/../Libs" />
+      <IlRepackLibs Include="$(VRChatPath)MelonLoader" />
+      <IlRepackLibs Include="$(VRChatPath)MelonLoader\Managed" />
     </ItemGroup>
     <Message Text="MERGING: @(InputAssemblies->'%(Filename)') into $(OutputAssembly)" Importance="High" />
     <ILRepack Internalize="true" LibraryPath="@(IlRepackLibs)" OutputFile="$(OutputPath)/$(AssemblyName)Restored.dll" InputAssemblies="@(InputAssemblies)" />
-	<Exec Command="copy &quot;$(OutputPath)/$(AssemblyName)Restored$(TargetExt)&quot; &quot;C:\Program Files (x86)\Steam\steamapps\common\VRChat\Mods\$(TargetName)Restored$(TargetExt)&quot;" />
+	<Exec Command="copy &quot;$(OutputPath)/$(AssemblyName)Restored$(TargetExt)&quot; &quot;$(VRChatPath)Mods\$(TargetName)Restored$(TargetExt)&quot;" />
   </Target>
 </Project>
