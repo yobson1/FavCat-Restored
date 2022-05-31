@@ -125,10 +125,10 @@ namespace FavCat.Database
 		private static unsafe Texture2D CreateTextureFromImage(Image<Rgba32> image)
 		{
 			image.Mutate(processor => processor.Flip(FlipMode.Vertical));
-			image.TryGetSinglePixelSpan(out var pixels);
+			image.DangerousTryGetSinglePixelMemory(out var pixels);
 
 			var texture = new Texture2D(image.Width, image.Height, TextureFormat.RGBA32, false, false);
-			fixed (void* pixelsPtr = pixels)
+			fixed (void* pixelsPtr = pixels.Span)
 				texture.LoadRawTextureData((IntPtr)pixelsPtr, pixels.Length * 4);
 
 			texture.Apply(false, true);
