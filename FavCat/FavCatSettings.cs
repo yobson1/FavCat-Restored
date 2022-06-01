@@ -40,6 +40,7 @@ namespace FavCat
 
 		internal static MelonPreferences_Entry<string> BaseColorPref;
 		internal static MelonPreferences_Entry<string> AccentColorPref;
+		internal static MelonPreferences_Entry<bool> HideVRCPlusCategories;
 
 		private static bool IsStyletorLoaded
 		{
@@ -65,6 +66,14 @@ namespace FavCat
 			UseStyletorColors = Category.CreateEntry(nameof(UseStyletorColors), false, "Inherit color choices from Styletor");
 			StyletorBase = MelonPreferences.GetEntry<string>("Styletor", "BaseColorString");
 			StyletorAccent = MelonPreferences.GetEntry<string>("Styletor", "AccentColorString");
+		}
+
+		private static void HideVRCPlusCategoriesChanged(bool oldVal, bool newVal)
+		{
+			if (newVal && GameObject.Find("UserInterface/MenuContent/Screens/Avatar/Vertical Scroll View/Viewport/Content/FavoriteContent/avatars2") != null)
+			{
+				FavCatMod.HideVRCPlusCategories(GameObject.Find("UserInterface/MenuContent/Screens/Avatar/Vertical Scroll View/Viewport/Content/FavoriteContent").transform);
+			}
 		}
 
 		internal static void RegisterSettings()
@@ -98,6 +107,9 @@ namespace FavCat
 
 			BaseColorPref = Category.CreateEntry(nameof(BaseColorPref), "0 60 60", "Base color");
 			AccentColorPref = Category.CreateEntry(nameof(AccentColorPref), "106 227 249", "Accent color");
+
+			HideVRCPlusCategories = Category.CreateEntry(nameof(HideVRCPlusCategories), false, "Hide VRC+ categories");
+			HideVRCPlusCategories.OnValueChanged += HideVRCPlusCategoriesChanged;
 
 			ExpansionKitApi.RegisterSettingAsStringEnum(SettingsCategory, "ImageCachingMode", new[] { ("full", "Full local image cache (fastest, safest)"), ("fast", "Fast, use more RAM"), ("builtin", "Preserve RAM, more API requests") });
 			ExpansionKitApi.RegisterSettingAsStringEnum(SettingsCategory, avatarSearchModeName, new[] { ("select", "Select avatar"), ("author", "Show avatar author (safer)") });

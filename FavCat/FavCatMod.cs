@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Collections;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using FavCat;
@@ -85,6 +86,24 @@ namespace FavCat
 			Database = null;
 		}
 
+		private static IEnumerator HideVRCPlusCategoriesCoro()
+		{
+			var avatarLists = GameObject.Find("UserInterface/MenuContent/Screens/Avatar/Vertical Scroll View/Viewport/Content/FavoriteContent").transform;
+			while (avatarLists.Find("avatars1") == null)
+				yield return null;
+
+			HideVRCPlusCategories(avatarLists);
+		}
+
+		internal static void HideVRCPlusCategories(Transform avatarLists)
+		{
+			MelonLogger.Msg("Hiding VRC+ categories");
+			Object.DestroyImmediate(avatarLists.Find("avatars2").gameObject);
+			Object.DestroyImmediate(avatarLists.Find("avatars3").gameObject);
+			Object.DestroyImmediate(avatarLists.Find("avatars4").gameObject);
+			Object.DestroyImmediate(avatarLists.Find("avatars1/GetMoreFavorites").gameObject);
+		}
+
 		public void OnUiManagerInit()
 		{
 			AssetsHandler.Load();
@@ -121,6 +140,9 @@ namespace FavCat
 
 			PageUserInfo = GameObject.Find("UserInterface/MenuContent/Screens/UserInfo").GetComponent<PageUserInfo>();
 			MelonLogger.Msg("Initialized!");
+
+			if (FavCatSettings.HideVRCPlusCategories.Value)
+				MelonCoroutines.Start(HideVRCPlusCategoriesCoro());
 		}
 
 		public override void OnUpdate()
