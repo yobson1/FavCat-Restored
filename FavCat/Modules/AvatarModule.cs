@@ -218,15 +218,16 @@ namespace FavCat.Modules
 					MelonDebug.Msg("API request errored with " + c.Code + " - " + c.Error);
 				if (c.Code == 404 && listsParent.gameObject.activeInHierarchy)
 				{
-					FavCatMod.Database.CompletelyDeleteAvatar(model.Id);
+					var storedAvatar = FavCatMod.Database?.myStoredAvatars.FindById(model.Id);
+
 					var menu = ExpansionKitApi.CreateCustomFullMenuPopup(LayoutDescription.WideSlimList);
+					menu.AddLabel("This avatar is not available anymore!");
+					menu.AddLabel($"Name: {storedAvatar?.Name}");
+					menu.AddLabel($"Description: {storedAvatar?.Description}");
+					menu.AddLabel($"Author name: {storedAvatar?.AuthorName}");
+					menu.AddLabel($"Last updated: {storedAvatar?.UpdatedAt.ToString("dd/MM/yyyy HH:mm:ss")}");
 					menu.AddSpacer();
-					menu.AddSpacer();
-					menu.AddLabel("This avatar is not available anymore (deleted or privated)");
-					menu.AddLabel("It has been removed from all favorite lists");
-					menu.AddSpacer();
-					menu.AddSpacer();
-					menu.AddSpacer();
+					menu.AddSimpleButton("Delete from favorites & close", () => { FavCatMod.Database?.CompletelyDeleteAvatar(model.Id); menu.Hide(); });
 					menu.AddSimpleButton("Close", menu.Hide);
 					menu.Show();
 				}
