@@ -107,15 +107,16 @@ namespace FavCat.Modules
 					MelonDebug.Msg("API request errored with " + c.Code + " - " + c.Error);
 				if (c.Code == 404 && listsParent.gameObject.activeInHierarchy)
 				{
-					FavCatMod.Database.CompletelyDeleteWorld(picker.Id);
+					var storedWorld = FavCatMod.Database?.myStoredWorlds.FindById(picker.Id);
+
 					var menu = ExpansionKitApi.CreateCustomFullMenuPopup(LayoutDescription.WideSlimList);
+					menu.AddLabel("This world is not available anymore!");
+					menu.AddLabel($"Name: {storedWorld?.Name}");
+					// menu.AddLabel($"Description: {storedWorld?.Description}");
+					menu.AddLabel($"Author name: {storedWorld?.AuthorName}");
+					menu.AddLabel($"Last updated: {storedWorld?.UpdatedAt.ToString("dd/MM/yyyy HH:mm:ss")}");
 					menu.AddSpacer();
-					menu.AddSpacer();
-					menu.AddLabel("This world is not available anymore (deleted)");
-					menu.AddLabel("It has been removed from all favorite lists");
-					menu.AddSpacer();
-					menu.AddSpacer();
-					menu.AddSpacer();
+					menu.AddSimpleButton("Delete from favorites & close", () => { FavCatMod.Database?.CompletelyDeleteWorld(picker.Id); menu.Hide(); });
 					menu.AddSimpleButton("Close", menu.Hide);
 					menu.Show();
 				}
