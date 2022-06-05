@@ -21,6 +21,7 @@ using Object = UnityEngine.Object;
 
 [assembly: MelonInfo(typeof(FavCatMod), "FavCatRestored", "1.1.18", "Felkon & yobson (Original By Knah)", "https://github.com/yobson1/FavCat-Restored/releases/latest/download/FavCatRestored.dll")]
 [assembly: MelonGame("VRChat", "VRChat")]
+[assembly: MelonOptionalDependencies("System.Text.Encoding.CodePages")]
 
 namespace FavCat
 {
