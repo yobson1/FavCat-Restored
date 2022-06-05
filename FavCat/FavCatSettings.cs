@@ -42,6 +42,8 @@ namespace FavCat
 		internal static MelonPreferences_Entry<string> AccentColorPref;
 		internal static MelonPreferences_Entry<bool> HideVRCPlusCategories;
 
+		internal static MelonPreferences_Entry<bool> AutoUpdate;
+
 		private static bool IsStyletorLoaded
 		{
 			get
@@ -110,6 +112,8 @@ namespace FavCat
 
 			HideVRCPlusCategories = Category.CreateEntry(nameof(HideVRCPlusCategories), false, "Hide VRC+ categories");
 			HideVRCPlusCategories.OnValueChanged += HideVRCPlusCategoriesChanged;
+
+			AutoUpdate = Category.CreateEntry(nameof(AutoUpdate), true, "Auto update FavCat");
 
 			ExpansionKitApi.RegisterSettingAsStringEnum(SettingsCategory, "ImageCachingMode", new[] { ("full", "Full local image cache (fastest, safest)"), ("fast", "Fast, use more RAM"), ("builtin", "Preserve RAM, more API requests") });
 			ExpansionKitApi.RegisterSettingAsStringEnum(SettingsCategory, avatarSearchModeName, new[] { ("select", "Select avatar"), ("author", "Show avatar author (safer)") });

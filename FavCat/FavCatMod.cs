@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Net;
 using System.Linq;
 using System.Collections;
 using System.Reflection;
@@ -18,8 +19,9 @@ using VRC.Core;
 using VRC.UI;
 using ImageDownloaderClosure = ImageDownloader.__c__DisplayClass11_0;
 using Object = UnityEngine.Object;
+using Newtonsoft.Json.Linq;
 
-[assembly: MelonInfo(typeof(FavCatMod), "FavCatRestored", "1.1.18", "Felkon & yobson (Original By Knah)", "https://github.com/yobson1/FavCat-Restored/releases/latest/download/FavCatRestored.dll")]
+[assembly: MelonInfo(typeof(FavCatMod), "FavCatRestored", "1.1.19", "Felkon & yobson (Original By Knah)", "https://github.com/yobson1/FavCat-Restored")]
 [assembly: MelonGame("VRChat", "VRChat")]
 [assembly: MelonOptionalDependencies("System.Text.Encoding.CodePages")]
 
@@ -36,10 +38,76 @@ namespace FavCat
 
 		internal static PageUserInfo PageUserInfo;
 
+		private static bool IsVersionNewer(string version1, string version2)
+		{
+			var version1Parts = version1.Split('.');
+			var version2Parts = version2.Split('.');
+
+			for (var i = 0; i < Math.Min(version1Parts.Length, version2Parts.Length); i++)
+			{
+				if (int.Parse(version1Parts[i]) > int.Parse(version2Parts[i]))
+				{
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		private static bool UpdateMod()
+		{
+			// Get our current version
+			var currentVersion = Instance.Info.Version;
+
+			try
+			{
+				// Get the latest version from the GitHub repo
+				var webClient = new WebClient();
+				webClient.Headers.Add("user-agent", "yobson1-FavCat-Restored");
+
+				var releaseJson = webClient.DownloadString("https://api.github.com/repos/yobson1/FavCat-Restored/releases/latest");
+				var release = JObject.Parse(releaseJson);
+				string latestVersion = (string)release["tag_name"];
+
+				if (latestVersion == null)
+				{
+					MelonLogger.Error("Failed to get latest version from GitHub");
+					return false;
+				}
+
+				// If the current version is older than the latest version, we need to update
+				if (IsVersionNewer(latestVersion, currentVersion))
+				{
+					MelonLogger.Msg($"Updating from v{currentVersion} to v{latestVersion}");
+					webClient.DownloadFile("https://github.com/yobson1/FavCat-Restored/releases/latest/download/FavCatRestored.dll", Directory.GetCurrentDirectory() + "/Mods/FavCatRestored.dll");
+					MelonLogger.Msg($"FavCatRestored has been updated to v{latestVersion}\nThe update will take effect on the next restart");
+					return true;
+				}
+				else
+				{
+					return false;
+
+				}
+			}
+			catch (Exception ex)
+			{
+				MelonLogger.Error($"Failed to get latest version from GitHub: {ex.Message}");
+				return false;
+			}
+		}
+
 		public override void OnApplicationStart()
 		{
 			Instance = this;
 			if (!CheckWasSuccessful || !MustStayTrue || MustStayFalse) return;
+
+			FavCatSettings.RegisterSettings();
+
+			if (FavCatSettings.AutoUpdate.Value)
+			{
+				// TODO: Show a notification to the user there has been an update
+				UpdateMod();
+			}
 
 			Directory.CreateDirectory("./UserData/FavCatImport");
 
@@ -47,9 +115,6 @@ namespace FavCat
 			ClassInjector.RegisterTypeInIl2Cpp<CustomPicker>();
 
 			ApiSnifferPatch.DoPatch();
-
-			FavCatSettings.RegisterSettings();
-
 			MelonLogger.Msg("Creating database");
 			Database = new LocalStoreDatabase(FavCatSettings.DatabasePath.Value, FavCatSettings.ImageCachePath.Value);
 
