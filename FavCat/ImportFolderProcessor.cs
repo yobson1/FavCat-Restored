@@ -129,7 +129,7 @@ namespace FavCat
 
 			for (var i = 0; i < toAddAvatar.Count; i++)
 			{
-				ImportStatusInner = $"Fetching world {i + 1}/{toAddAvatar.Count}";
+				ImportStatusInner = $"Fetching avatar {i + 1}/{toAddAvatar.Count}";
 				var AvatarId = toAddAvatar[i];
 				if (database.myStoredAvatars.FindById(AvatarId) == null)
 				{
@@ -170,12 +170,11 @@ namespace FavCat
 				module.ReorderLists();
 			}
 
-			DoAddCategories(toAddWorlds, database.WorldFavorites, FavCatMod.Instance.WorldsModule, database.myStoredWorlds);
+			DoAddCategories(toAddAvatar, database.AvatarFavorites, FavCatMod.Instance.AvatarModule, database.myStoredAvatars);
 			DoAddCategories(toAddWorlds, database.WorldFavorites, FavCatMod.Instance.WorldsModule, database.myStoredWorlds);
 			DoAddCategories(toAddUsers, database.PlayerFavorites, FavCatMod.Instance.PlayerModule, database.myStoredPlayers);
 
-			MelonLogger.Msg($"Done importing {fileName}");
-			File.Delete(filePath);
+			MelonLogger.Msg($"Done importing {fileName}\n{toAddUsers.Count} users, {toAddWorlds.Count} worlds, {toAddAvatar.Count} avatars");
 		}
 
 		internal static Task MergeInForeignStore(string foreignStorePath)
