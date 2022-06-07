@@ -14,14 +14,14 @@ Tell me what's wrong, going into any details you can.
 ### **Screenshots**
 **If applicable**, add screenshots to help explain your problem.
 
+### **Errors**
+**If any** put the errors produced by FavCatRestored when the issue occurs here.
 
 ### **Questions:**
- - Which version of VRChat are you running?:
  - Are you using the latest version of FavCatRestored?:
  - Are you using the latest version of UIX?: 
  - Does the issue happen if you only use FavCatRestored & UIX?
- - Are you using the latest version of melonloader / emmVRC?:
+ - Are you using the latest version of MelonLoader?:
 
-
-### **Additional context**
-Add any other context about the problem here.
+### **MelonLoader log**
+Please attach the MelonLoader log from when the error occured if it may be relevant.
