@@ -86,7 +86,6 @@ namespace FavCat
 				else
 				{
 					return false;
-
 				}
 			}
 			catch (Exception ex)
@@ -245,11 +244,10 @@ namespace FavCat
 			ImageUrlField = (NestedClosureField != null ? possibleNestedClosureType : ImageDownloaderClosureType)!.GetProperty("imageUrl")!.GetMethod;
 		}
 
-
 		public static void DoPatch()
 		{
 			NativePatchUtils.NativePatch(typeof(ApiModel).GetMethods().Single(it =>
-					it.Name == nameof(ApiModel.SetApiFieldsFromJson) && it.GetParameters().Length == 2 && it.GetParameters()[0].ParameterType.GenericTypeArguments[1] == typeof(Il2CppSystem.Object)),
+					it.Name == nameof(ApiModel.SetApiFieldsFromJson) && it.GetParameters().Length == 2 && it.GetParameters()[0].ParameterType.GenericTypeArguments[1] != typeof(Il2CppSystem.Object)),
 				out ourOriginalApiPopulate, ApiSnifferStatic);
 
 			NativePatchUtils.NativePatch(ImageDownloaderClosureType.GetMethod(nameof(ImageDownloaderClosure
@@ -296,12 +294,25 @@ namespace FavCat
 			try
 			{
 				var apiModel = new ApiModel(@this);
-				if (!apiModel.Populated) return result;
 
-				var maybeUser = apiModel.TryCast<APIUser>();
-				if (maybeUser != null) FavCatMod.Database?.UpdateStoredPlayer(maybeUser);
-				var maybeWorld = apiModel.TryCast<ApiWorld>();
-				if (maybeWorld != null) FavCatMod.Database?.UpdateStoredWorld(maybeWorld);
+				if (apiModel.Populated)
+				{
+					if (apiModel.Endpoint == "worlds")
+					{
+						var world = apiModel.Cast<ApiWorld>();
+						FavCatMod.Database?.UpdateStoredWorld(world);
+					}
+					else if (apiModel.Endpoint == "users")
+					{
+						var user = apiModel.Cast<APIUser>();
+						FavCatMod.Database?.UpdateStoredPlayer(user);
+					}
+					else if (apiModel.Endpoint == "avatars")
+					{
+						var avatar = apiModel.Cast<ApiAvatar>();
+						FavCatMod.Database?.UpdateStoredAvatar(avatar);
+					}
+				}
 			}
 			catch (Exception ex)
 			{
