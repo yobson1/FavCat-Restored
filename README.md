@@ -1,3 +1,6 @@
+# eac lol
+VRChat added EAC so melonloader and related mods no longer work. pogchamp.
+
 [![GitHub license](https://img.shields.io/github/license/yobson1/FavCat-Restored?style=flat-square)](https://github.com/yobson1/FavCat-Restored/blob/master/LICENSE)
 [![GitHub all releases](https://img.shields.io/github/downloads/yobson1/FavCat-Restored/total?color=%23eab0e3&style=flat-square)](https://github.com/yobson1/FavCat-Restored/releases)
 [![GitHub stars](https://img.shields.io/github/stars/yobson1/FavCat-Restored?color=%23ffcd3c&style=flat-square)](https://github.com/yobson1/FavCat-Restored/stargazers)
